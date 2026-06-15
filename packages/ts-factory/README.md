@@ -42,10 +42,14 @@ Once a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`)
 native compiler, that JavaScript `ts.factory` / `ts.Printer` API is no longer
 available — so AST based code generation built on top of it breaks.
 
-`ts-factory` keeps that capability alive. It re-publishes the legacy factory and
-printer **with the exact same API interface** under a stable, dependency-free
-import path, so your code generators keep running regardless of which compiler
-builds the rest of your project.
+`ts-factory` keeps that capability alive. It **embeds its own copy** of the
+legacy factory and printer (bundled from `typescript@6`) and re-publishes them
+**with the exact same API interface** under a stable import path — with **zero
+runtime dependencies**. Your code generators keep running regardless of which
+compiler builds the rest of your project, and you never install `typescript`.
+
+> The bundled TypeScript implementation is distributed under the Apache License
+> 2.0; see [`ThirdPartyNotices.txt`](./ThirdPartyNotices.txt).
 
 ## API
 

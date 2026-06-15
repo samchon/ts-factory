@@ -25,9 +25,11 @@ console.log(printer.print(node));
 
 When a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`)
 native compiler, the legacy JavaScript `ts.factory` / `ts.Printer` API used for
-AST based code generation is no longer available. `ts-factory` re-publishes that
-legacy factory and printer — **with the exact same API interface** — under a
-stable import path, so your code generators keep working.
+AST based code generation is no longer available. `ts-factory` **embeds its own
+copy** of that legacy factory and printer (bundled from `typescript@6`) and
+re-publishes them — **with the exact same API interface, zero runtime
+dependencies** — under a stable import path, so your code generators keep
+working without ever installing `typescript`.
 
 See [`packages/ts-factory/README.md`](./packages/ts-factory/README.md) for the
 full API documentation.

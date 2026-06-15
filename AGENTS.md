@@ -25,12 +25,29 @@ This is a [pnpm](https://pnpm.io) workspace.
 - `config` — shared `tsconfig.json` and `rollup.config.mjs`.
 - `tests/test-factory` — dependency-free behavior tests (`test_*` features).
 
+## Self-contained — zero runtime dependencies
+
+The published package must NOT depend on the external `typescript` module at
+runtime. That dependency is exactly what the TypeScript-Go era removes, so
+`ts-factory` **embeds its own copy** of the legacy compiler's factory/printer:
+
+- `typescript` (`~6.x`, pinned via the `typescript` pnpm catalog) is a
+  **devDependency only**.
+- The build pipeline (`packages/ts-factory`):
+  1. `ttsc` compiles `src/` to an **ESM** intermediate in `bin/` (the ESM format
+     is what lets rollup preserve our named exports).
+  2. `rollup` bundles `bin/index.js` into `lib/index.js` (CJS) and
+     `lib/index.mjs` (ESM), **inlining the entire `typescript` implementation**.
+     Only Node.js built-ins stay external.
+  3. `scripts/postbuild.mjs` vendors `typescript.d.ts` into `lib/`, rewrites every
+     `"typescript"` specifier in the emitted `.d.ts` to `"./typescript"`, and
+     regenerates `ThirdPartyNotices.txt` (TypeScript is Apache-2.0).
+- `tests/test-factory` has a `test_bundle_self_contained` guard asserting the
+  built bundle never `require("typescript")`. Keep it green.
+
 ## Conventions
 
 - **Language**: TypeScript, `strict`. Built with `ttsc` (tsgo) + `rollup`.
-- **Runtime dependency**: the legacy `typescript` package (`~6.x`), pinned via the
-  `typescript` pnpm catalog. It is the implementation behind `factory`, `ts`, and
-  `TsFactoryPrinter`; never depend on the native preview at runtime for these.
 - **Formatting**: `prettier` (`pnpm format`). 80 columns, 2 spaces, trailing commas.
 - **Public API**: keep it identical to the legacy TypeScript interface. Add
   ergonomics (like `TsFactoryPrinter`) as additive wrappers, never by diverging

@@ -2,7 +2,13 @@
   "extends": "../../config/tsconfig.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib"
+    "outDir": "bin",
+    // Emit an ES module intermediate so rollup statically sees our named
+    // exports (`factory`, `ts`, `TsFactoryPrinter`) and preserves them while
+    // it inlines the legacy `typescript` implementation. The published `.js` /
+    // `.mjs` are produced by rollup; this format only affects the intermediate.
+    "module": "esnext",
+    "moduleResolution": "bundler"
   },
   "include": ["src"]
 }

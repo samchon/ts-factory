@@ -1,14 +1,14 @@
 {
   "name": "ts-factory",
   "version": "0.1.0",
-  "description": "Standalone legacy TypeScript AST factory and printer for source code generation, surviving the TypeScript-Go (tsgo) migration.",
+  "description": "Self-contained legacy TypeScript AST factory and printer for source code generation, surviving the TypeScript-Go (tsgo) migration. Zero runtime dependencies.",
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "rimraf lib && ttsc && rollup -c",
+    "build": "rimraf bin lib && ttsc && rollup -c && node scripts/postbuild.mjs && rimraf bin",
     "dev": "ttsc --watch",
     "prepack": "pnpm run build"
   },
@@ -22,26 +22,21 @@
     "url": "https://github.com/samchon/ts-factory/issues"
   },
   "homepage": "https://github.com/samchon/ts-factory",
-  "dependencies": {
-    "typescript": "catalog:typescript"
-  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "catalog:rollup",
     "@rollup/plugin-node-resolve": "catalog:rollup",
     "@typescript/native-preview": "catalog:typescript",
     "rimraf": "catalog:utils",
     "rollup": "catalog:rollup",
-    "rollup-plugin-auto-external": "catalog:rollup",
-    "rollup-plugin-node-externals": "catalog:rollup",
-    "tinyglobby": "^0.2.12",
-    "ttsc": "catalog:typescript"
+    "ttsc": "catalog:typescript",
+    "typescript": "catalog:typescript"
   },
   "sideEffects": false,
   "files": [
     "README.md",
+    "ThirdPartyNotices.txt",
     "package.json",
-    "lib",
-    "src"
+    "lib"
   ],
   "keywords": [
     "typescript",

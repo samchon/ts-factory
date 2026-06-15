@@ -1,3 +1,4 @@
+export * from "./test_bundle_self_contained";
 export * from "./test_factory_call_expression";
 export * from "./test_factory_identifier";
 export * from "./test_factory_string_literal";

@@ -78,10 +78,6 @@ importers:
         version: 0.2.17
 
   packages/ts-factory:
-    dependencies:
-      typescript:
-        specifier: catalog:typescript
-        version: 6.0.3
     devDependencies:
       '@rollup/plugin-commonjs':
         specifier: catalog:rollup
@@ -98,18 +94,12 @@ importers:
       rollup:
         specifier: catalog:rollup
         version: 4.62.0
-      rollup-plugin-auto-external:
-        specifier: catalog:rollup
-        version: 2.0.0(rollup@4.62.0)
-      rollup-plugin-node-externals:
-        specifier: catalog:rollup
-        version: 8.1.2(rollup@4.62.0)
-      tinyglobby:
-        specifier: ^0.2.12
-        version: 0.2.17
       ttsc:
         specifier: catalog:typescript
         version: 0.15.3
+      typescript:
+        specifier: catalog:typescript
+        version: 6.0.3
 
   tests/test-factory:
     dependencies:
