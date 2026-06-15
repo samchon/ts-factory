@@ -1,0 +1,18 @@
+packages:
+  - 'config'
+  - 'packages/*'
+  - 'tests/*'
+catalogs:
+  typescript:
+    typescript: ~6.0.3
+    ttsc: ^0.15.3
+    '@typescript/native-preview': 7.0.0-dev.20260615.1
+  rollup:
+    rollup: ^4.56.0
+    rollup-plugin-auto-external: ^2.0.0
+    rollup-plugin-node-externals: ^8.1.2
+    '@rollup/plugin-commonjs': ^29.0.0
+    '@rollup/plugin-node-resolve': ^16.0.3
+  utils:
+    '@types/node': ^25.3.3
+    rimraf: ^6.1.3

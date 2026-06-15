@@ -1,0 +1,15 @@
+.claude/
+.codex/
+.discussions/
+.wiki/
+
+bin/
+dist/
+lib/
+node_modules/
+
+package-lock.json
+
+*.env
+*.log
+*.tgz

@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "ts-factory-station",
+  "version": "0.1.0",
+  "description": "ts-factory workspace",
+  "scripts": {
+    "build": "pnpm --filter=./packages/* -r build",
+    "dev": "pnpm --filter=./packages/* -r dev",
+    "format": "prettier --write \"**/*.ts\"",
+    "test": "pnpm run build && pnpm --filter=./tests/test-* --workspace-concurrency=1 -r start",
+    "package:latest": "pnpm --filter=./packages/* -r publish --tag latest --access public",
+    "package:next": "bash next.bash",
+    "release": "bumpp -r"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samchon/ts-factory"
+  },
+  "author": "Jeongho Nam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/samchon/ts-factory/issues"
+  },
+  "homepage": "https://github.com/samchon/ts-factory",
+  "packageManager": "pnpm@10.6.4",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "bumpp": "^10.4.1",
+    "prettier": "^3.8.1",
+    "prettier-plugin-jsdoc": "^1.8.0"
+  }
+}
