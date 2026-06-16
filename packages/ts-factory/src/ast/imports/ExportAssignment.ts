@@ -1,3 +1,9 @@
-import type { Statement } from "../statements/Statement";
+import type { Expression } from "../expressions/Expression";
+import type { ModifierLike } from "../names/ModifierLike";
 
-export interface ExportAssignment extends Statement {}
+export interface ExportAssignment {
+  kind: "ExportAssignment";
+  modifiers?: readonly ModifierLike[];
+  isExportEquals?: boolean;
+  expression: Expression;
+}

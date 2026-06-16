@@ -1,3 +1,6 @@
 import type { TypeNode } from "./TypeNode";
 
-export interface IntersectionTypeNode extends TypeNode {}
+export interface IntersectionTypeNode {
+  kind: "IntersectionTypeNode";
+  types: readonly TypeNode[];
+}

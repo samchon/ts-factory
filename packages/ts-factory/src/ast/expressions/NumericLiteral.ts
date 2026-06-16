@@ -1,6 +1,4 @@
-import type { Expression } from "./Expression";
-
-export interface NumericLiteral extends Expression {
+export interface NumericLiteral {
   kind: "NumericLiteral";
   text: string;
 }

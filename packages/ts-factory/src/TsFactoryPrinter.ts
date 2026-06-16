@@ -1,4 +1,4 @@
-import type { Node, SourceFile, Statement } from "./ast";
+import type { ModifierLike, Node, SourceFile, Statement } from "./ast";
 import { tokenToString } from "./syntax";
 
 /** Options for {@link TsFactoryPrinter}. */
@@ -21,12 +21,13 @@ const escapeString = (text: string, singleQuote?: boolean): string => {
 };
 
 /**
- * Printer turning {@link factory} produced outline AST nodes into TypeScript
- * source text.
+ * Printer turning {@link factory} produced AST nodes into TypeScript source
+ * text.
  *
- * Unlike a thin wrapper over the legacy `ts.Printer`, this printer is
- * implemented directly: it recursively walks the hand-written AST and emits
- * source text with four-space indentation. No `typescript` module is involved.
+ * The printer is implemented directly — it recursively walks the hand-written
+ * {@link Node} discriminated union and emits source text with four-space
+ * indentation. Every `node.kind` narrows to its concrete type, so the walk is
+ * fully type-checked; no `typescript` module is involved.
  *
  * @author Jeongho Nam - https://github.com/samchon
  * @example
@@ -48,8 +49,7 @@ export class TsFactoryPrinter {
 
   /** Print a single node (or a whole {@link SourceFile}) into source text. */
   public print(node: Node): string {
-    const text: string = this.emit(node);
-    return this.newLine_ === "\n" ? text : text.replace(/\n/g, this.newLine_);
+    return this.lineify(this.emit(node));
   }
 
   /** Print multiple nodes, joining them with new lines. */
@@ -70,15 +70,18 @@ export class TsFactoryPrinter {
     statements: readonly Statement[] = [],
   ): string {
     const list: readonly Statement[] = sourceFile
-      ? (sourceFile as any).statements
+      ? sourceFile.statements
       : statements;
-    const body: string = list.map((s) => this.emit(s)).join("\n") + "\n";
-    return this.newLine_ === "\n" ? body : body.replace(/\n/g, this.newLine_);
+    return this.lineify(list.map((s) => this.emit(s)).join("\n") + "\n");
   }
 
   /* ----------------------------------------------------------------------- */
   /*  INTERNAL                                                               */
   /* ----------------------------------------------------------------------- */
+  private lineify(text: string): string {
+    return this.newLine_ === "\n" ? text : text.replace(/\n/g, this.newLine_);
+  }
+
   private indent(text: string): string {
     return text
       .split("\n")
@@ -86,29 +89,29 @@ export class TsFactoryPrinter {
       .join("\n");
   }
 
-  private list(nodes: readonly any[] | undefined, separator: string): string {
+  private list(nodes: readonly Node[] | undefined, separator: string): string {
     return (nodes ?? []).map((n) => this.emit(n)).join(separator);
   }
 
-  private typeArguments(args: readonly any[] | undefined): string {
+  private typeArguments(args: readonly Node[] | undefined): string {
     return args && args.length ? `<${this.list(args, ", ")}>` : "";
   }
 
-  private typeParameters(params: readonly any[] | undefined): string {
+  private typeParameters(params: readonly Node[] | undefined): string {
     return params && params.length ? `<${this.list(params, ", ")}>` : "";
   }
 
-  private parameters(params: readonly any[] | undefined): string {
+  private parameters(params: readonly Node[] | undefined): string {
     return `(${this.list(params, ", ")})`;
   }
 
   private modifiers(
-    mods: readonly any[] | undefined,
+    mods: readonly ModifierLike[] | undefined,
     decoratorsOnNewLine: boolean,
   ): string {
     if (!mods || mods.length === 0) return "";
-    const decorators: any[] = mods.filter((m) => m.kind === "Decorator");
-    const tokens: any[] = mods.filter((m) => m.kind !== "Decorator");
+    const decorators = mods.filter((m) => m.kind === "Decorator");
+    const tokens = mods.filter((m) => m.kind !== "Decorator");
     let out: string = "";
     if (decorators.length)
       out +=
@@ -126,12 +129,12 @@ export class TsFactoryPrinter {
     return `{\n${this.indent(members.join("\n"))}\n}`;
   }
 
-  private heritage(clauses: readonly any[] | undefined): string {
+  private heritage(clauses: readonly Node[] | undefined): string {
     return clauses && clauses.length ? ` ${this.list(clauses, " ")}` : "";
   }
 
-  private emit(node: any): string {
-    switch (node.kind as string) {
+  private emit(node: Node): string {
+    switch (node.kind) {
       /* names & tokens */
       case "Identifier":
         return node.text;
@@ -160,7 +163,7 @@ export class TsFactoryPrinter {
             ? `[\n${this.indent(this.list(node.elements, ",\n"))}\n]`
             : `[${this.list(node.elements, ", ")}]`;
       case "ObjectLiteralExpression": {
-        const props: string[] = node.properties.map((p: any) => this.emit(p));
+        const props: string[] = node.properties.map((p) => this.emit(p));
         if (props.length === 0) return "{}";
         return node.multiLine === true
           ? `{\n${this.indent(props.join(",\n"))}\n}`
@@ -250,7 +253,7 @@ export class TsFactoryPrinter {
         return this.emit(node.literal);
       case "TypeLiteralNode":
         return this.braced(
-          node.members.map((m: any) => `${this.emit(m)};`),
+          node.members.map((m) => `${this.emit(m)};`),
           false,
         );
       case "FunctionTypeNode":
@@ -352,7 +355,7 @@ export class TsFactoryPrinter {
           this.modifiers(node.modifiers, true) +
           "function" +
           (node.asteriskToken ? "*" : "") +
-          ` ${this.emit(node.name)}` +
+          ` ${node.name ? this.emit(node.name) : ""}` +
           this.typeParameters(node.typeParameters) +
           this.parameters(node.parameters) +
           (node.type ? `: ${this.emit(node.type)}` : "") +
@@ -366,7 +369,7 @@ export class TsFactoryPrinter {
           this.typeParameters(node.typeParameters) +
           this.heritage(node.heritageClauses) +
           ` ${this.braced(
-            node.members.map((m: any) => this.emit(m)),
+            node.members.map((m) => this.emit(m)),
             true,
           )}`
         );
@@ -418,7 +421,7 @@ export class TsFactoryPrinter {
           this.typeParameters(node.typeParameters) +
           this.heritage(node.heritageClauses) +
           ` ${this.braced(
-            node.members.map((m: any) => `${this.emit(m)};`),
+            node.members.map((m) => `${this.emit(m)};`),
             true,
           )}`
         );
@@ -452,12 +455,10 @@ export class TsFactoryPrinter {
           `${this.emit(node.moduleSpecifier)};`
         );
       case "ImportClause": {
-        const parts: string[] = [];
-        if (node.isTypeOnly) parts.push("type");
         const named: string[] = [];
         if (node.name) named.push(this.emit(node.name));
         if (node.namedBindings) named.push(this.emit(node.namedBindings));
-        return `${parts.length ? "type " : ""}${named.join(", ")}`;
+        return `${node.isTypeOnly ? "type " : ""}${named.join(", ")}`;
       }
       case "NamedImports":
         return node.elements.length === 0
@@ -501,12 +502,18 @@ export class TsFactoryPrinter {
 
       /* source file */
       case "SourceFile":
-        return node.statements.map((s: any) => this.emit(s)).join("\n") + "\n";
+        return node.statements.map((s) => this.emit(s)).join("\n") + "\n";
 
       default:
-        throw new Error(
-          `ts-factory: TsFactoryPrinter cannot print node of kind "${node.kind}".`,
-        );
+        return this.unsupported(node);
     }
+  }
+
+  private unsupported(node: never): never {
+    throw new Error(
+      `ts-factory: TsFactoryPrinter cannot print node of kind "${
+        (node as Node).kind
+      }".`,
+    );
   }
 }

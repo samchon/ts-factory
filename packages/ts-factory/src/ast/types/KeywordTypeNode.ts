@@ -1,3 +1,6 @@
-import type { TypeNode } from "./TypeNode";
+import type { SyntaxKind } from "../../syntax";
 
-export interface KeywordTypeNode extends TypeNode {}
+export interface KeywordTypeNode {
+  kind: "KeywordTypeNode";
+  keyword: SyntaxKind;
+}

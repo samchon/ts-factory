@@ -1,3 +1,8 @@
-import type { Node } from "../Node";
+import type { PropertyAssignment } from "./PropertyAssignment";
+import type { ShorthandPropertyAssignment } from "./ShorthandPropertyAssignment";
+import type { SpreadAssignment } from "./SpreadAssignment";
 
-export interface ObjectLiteralElement extends Node {}
+export type ObjectLiteralElement =
+  | PropertyAssignment
+  | ShorthandPropertyAssignment
+  | SpreadAssignment;

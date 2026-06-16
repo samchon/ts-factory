@@ -1,3 +1,8 @@
-import type { Node } from "../Node";
+import type { IndexSignatureDeclaration } from "./IndexSignatureDeclaration";
+import type { MethodSignature } from "./MethodSignature";
+import type { PropertySignature } from "./PropertySignature";
 
-export interface TypeElement extends Node {}
+export type TypeElement =
+  | PropertySignature
+  | IndexSignatureDeclaration
+  | MethodSignature;

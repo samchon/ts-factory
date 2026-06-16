@@ -1,3 +1,6 @@
-import type { Node } from "../Node";
+import type { Identifier } from "../names/Identifier";
 
-export interface NamespaceImport extends Node {}
+export interface NamespaceImport {
+  kind: "NamespaceImport";
+  name: Identifier;
+}

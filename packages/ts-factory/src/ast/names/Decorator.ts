@@ -1,7 +1,6 @@
-import type { Node } from "../Node";
 import type { Expression } from "../expressions/Expression";
 
-export interface Decorator extends Node {
+export interface Decorator {
   kind: "Decorator";
   expression: Expression;
 }

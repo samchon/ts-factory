@@ -1,3 +1,6 @@
-import type { Statement } from "./Statement";
+import type { Expression } from "../expressions/Expression";
 
-export interface ThrowStatement extends Statement {}
+export interface ThrowStatement {
+  kind: "ThrowStatement";
+  expression: Expression;
+}

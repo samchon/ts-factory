@@ -1,3 +1,6 @@
-import type { TypeNode } from "./TypeNode";
+import type { TypeElement } from "./TypeElement";
 
-export interface TypeLiteralNode extends TypeNode {}
+export interface TypeLiteralNode {
+  kind: "TypeLiteralNode";
+  members: readonly TypeElement[];
+}

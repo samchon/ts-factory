@@ -1,7 +1,6 @@
-import type { Node } from "../Node";
 import type { Statement } from "../statements/Statement";
 
-export interface SourceFile extends Node {
+export interface SourceFile {
   kind: "SourceFile";
   statements: readonly Statement[];
 }

@@ -1,3 +1,8 @@
-import type { ObjectLiteralElement } from "./ObjectLiteralElement";
+import type { Identifier } from "../names/Identifier";
+import type { Expression } from "./Expression";
 
-export interface ShorthandPropertyAssignment extends ObjectLiteralElement {}
+export interface ShorthandPropertyAssignment {
+  kind: "ShorthandPropertyAssignment";
+  name: Identifier;
+  objectAssignmentInitializer?: Expression;
+}

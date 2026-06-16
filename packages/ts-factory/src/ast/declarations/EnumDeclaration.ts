@@ -1,3 +1,10 @@
-import type { Declaration } from "../statements/Declaration";
+import type { Identifier } from "../names/Identifier";
+import type { ModifierLike } from "../names/ModifierLike";
+import type { EnumMember } from "./EnumMember";
 
-export interface EnumDeclaration extends Declaration {}
+export interface EnumDeclaration {
+  kind: "EnumDeclaration";
+  modifiers?: readonly ModifierLike[];
+  name: Identifier;
+  members: readonly EnumMember[];
+}

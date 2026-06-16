@@ -1,3 +1,6 @@
-import type { Node } from "../Node";
+import type { ExportSpecifier } from "./ExportSpecifier";
 
-export interface NamedExports extends Node {}
+export interface NamedExports {
+  kind: "NamedExports";
+  elements: readonly ExportSpecifier[];
+}

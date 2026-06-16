@@ -1,3 +1,8 @@
-import type { Statement } from "./Statement";
+import type { ModifierLike } from "../names/ModifierLike";
+import type { VariableDeclarationList } from "./VariableDeclarationList";
 
-export interface VariableStatement extends Statement {}
+export interface VariableStatement {
+  kind: "VariableStatement";
+  modifiers?: readonly ModifierLike[];
+  declarationList: VariableDeclarationList;
+}

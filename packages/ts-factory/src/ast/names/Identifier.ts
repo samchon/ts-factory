@@ -1,6 +1,4 @@
-import type { Expression } from "../expressions/Expression";
-
-export interface Identifier extends Expression {
+export interface Identifier {
   kind: "Identifier";
   text: string;
 }

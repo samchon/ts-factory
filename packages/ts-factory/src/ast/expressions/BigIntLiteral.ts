@@ -1,6 +1,4 @@
-import type { Expression } from "./Expression";
-
-export interface BigIntLiteral extends Expression {
+export interface BigIntLiteral {
   kind: "BigIntLiteral";
   text: string;
 }

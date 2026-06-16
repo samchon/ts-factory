@@ -1,3 +1,6 @@
-import type { TypeNode } from "./TypeNode";
+import type { EntityName } from "../names/EntityName";
 
-export interface TypeQueryNode extends TypeNode {}
+export interface TypeQueryNode {
+  kind: "TypeQueryNode";
+  exprName: EntityName;
+}

@@ -1,3 +1,8 @@
-import type { Node } from "../Node";
+import type { Identifier } from "../names/Identifier";
 
-export interface ExportSpecifier extends Node {}
+export interface ExportSpecifier {
+  kind: "ExportSpecifier";
+  isTypeOnly: boolean;
+  propertyName?: Identifier;
+  name: Identifier;
+}

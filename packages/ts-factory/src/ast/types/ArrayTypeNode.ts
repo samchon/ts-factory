@@ -1,3 +1,6 @@
 import type { TypeNode } from "./TypeNode";
 
-export interface ArrayTypeNode extends TypeNode {}
+export interface ArrayTypeNode {
+  kind: "ArrayTypeNode";
+  elementType: TypeNode;
+}

@@ -1,6 +1,4 @@
-import type { Node } from "../Node";
-
-export interface PrivateIdentifier extends Node {
+export interface PrivateIdentifier {
   kind: "PrivateIdentifier";
   text: string;
 }

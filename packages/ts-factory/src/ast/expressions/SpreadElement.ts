@@ -1,3 +1,6 @@
 import type { Expression } from "./Expression";
 
-export interface SpreadElement extends Expression {}
+export interface SpreadElement {
+  kind: "SpreadElement";
+  expression: Expression;
+}
