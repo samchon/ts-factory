@@ -1,4 +1,4 @@
-import factory, { TsFactoryPrinter, ts } from "ts-factory";
+import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
 
 import { assert } from "../internal/assert";
 
@@ -8,7 +8,7 @@ export const test_printer_interface_declaration = (): void => {
       undefined,
       factory.createIdentifier(name),
       undefined,
-      factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+      factory.createKeywordTypeNode(SyntaxKind.NumberKeyword),
     );
   const node = factory.createInterfaceDeclaration(
     undefined,

@@ -1,4 +1,4 @@
-import factory, { TsFactoryPrinter, ts } from "ts-factory";
+import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
 
 import { assert } from "../internal/assert";
 
@@ -7,7 +7,7 @@ export const test_printer_type_alias = (): void => {
     undefined,
     factory.createIdentifier("MyString"),
     undefined,
-    factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword),
+    factory.createKeywordTypeNode(SyntaxKind.StringKeyword),
   );
   const printer = new TsFactoryPrinter();
   assert(printer.print(node), "type MyString = string;");

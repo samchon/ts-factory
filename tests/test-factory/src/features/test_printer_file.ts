@@ -1,4 +1,4 @@
-import factory, { TsFactoryPrinter, ts } from "ts-factory";
+import factory, { NodeFlags, TsFactoryPrinter } from "ts-factory";
 
 import { assert } from "../internal/assert";
 
@@ -14,7 +14,7 @@ export const test_printer_file = (): void => {
           factory.createNumericLiteral("42"),
         ),
       ],
-      ts.NodeFlags.Const,
+      NodeFlags.Const,
     ),
   );
   const printer = new TsFactoryPrinter();

@@ -8,9 +8,6 @@ dist/
 lib/
 node_modules/
 
-# generated at build time (postbuild) from the bundled typescript license
-packages/ts-factory/ThirdPartyNotices.txt
-
 package-lock.json
 
 *.env

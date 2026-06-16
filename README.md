@@ -4,7 +4,7 @@
 [![GitHub License](https://img.shields.io/github/license/samchon/ts-factory.svg)](https://github.com/samchon/ts-factory/blob/main/LICENSE)
 [![Build Status](https://github.com/samchon/ts-factory/workflows/build/badge.svg)](https://github.com/samchon/ts-factory/actions?query=workflow%3Abuild)
 
-Standalone legacy TypeScript **AST factory** and **printer** for source code generation.
+Hand-written, dependency-free TypeScript **AST factory** and **printer** for source code generation.
 
 ```typescript
 import factory, { TsFactoryPrinter } from "ts-factory";
@@ -25,11 +25,10 @@ console.log(printer.print(node));
 
 When a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`)
 native compiler, the legacy JavaScript `ts.factory` / `ts.Printer` API used for
-AST based code generation is no longer available. `ts-factory` **embeds its own
-copy** of that legacy factory and printer (bundled from `typescript@6`) and
-re-publishes them — **with the exact same API interface, zero runtime
-dependencies** — under a stable import path, so your code generators keep
-working without ever installing `typescript`.
+AST based code generation is no longer available. `ts-factory` **re-implements
+that factory and printer directly** — never importing `typescript`, with **zero
+dependencies** — so your code generators keep working no matter which compiler
+builds the rest of your project.
 
 See [`packages/ts-factory/README.md`](./packages/ts-factory/README.md) for the
 full API documentation.

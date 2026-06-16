@@ -1,33 +1,28 @@
-import ts from "typescript";
-
 import { factory } from "./factory";
 
 /**
- * The legacy TypeScript namespace (`<= 6.x`), re-published for convenience.
- *
- * Use it as a drop-in replacement for `import ts from "typescript"` when you
- * only need the AST building blocks (enums like {@link ts.SyntaxKind}, type
- * definitions like {@link ts.Node}, the {@link ts.EmitHint} hints, ...) for
- * source code generation. It stays available even after the surrounding
- * tool-chain moves on to the TypeScript-Go (tsgo) native compiler.
- */
-export { ts };
-
-/**
- * The legacy {@link ts.NodeFactory}, also available as the default export.
- *
- * @see {@link factory} for details.
- */
-export { factory };
-
-export * from "./factory";
-export * from "./TsFactoryPrinter";
-
-/**
- * Default export: the legacy {@link ts.NodeFactory}.
+ * Hand-written, dependency-free re-implementation of the legacy TypeScript AST
+ * factory (`ts.factory`) and printer (`ts.Printer`).
  *
  * ```typescript
- * import factory, { TsFactoryPrinter } from "ts-factory";
+ * import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
  * ```
+ *
+ * - `factory` (default export) — the node factory.
+ * - {@link TsFactoryPrinter} — renders factory nodes to TypeScript source text.
+ * - {@link SyntaxKind} / {@link NodeFlags} — token & flag enums.
+ * - Outline AST types (`Expression`, `Statement`, `TypeNode`, ...).
+ *
+ * No `typescript` module is imported anywhere; the logic is implemented
+ * directly, so this keeps working in the TypeScript-Go (tsgo) era.
+ *
+ * @author Jeongho Nam - https://github.com/samchon
  */
+export { factory };
+export type { NodeFactory } from "./factory";
+export { SyntaxKind, NodeFlags, tokenToString } from "./syntax";
+export { TsFactoryPrinter } from "./TsFactoryPrinter";
+export type { TsFactoryPrinterOptions } from "./TsFactoryPrinter";
+export type * from "./ast";
+
 export default factory;

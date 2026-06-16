@@ -2,56 +2,51 @@
 
 ## Project
 
-`ts-factory` re-publishes the **legacy** (`<= 6.x`, JavaScript based) TypeScript
-AST factory (`ts.factory`) and printer (`ts.Printer`) under a stable, standalone
-import path, so AST based source code generation keeps working after a project's
-tool-chain migrates to the TypeScript-Go (tsgo, `>= 7.x`) native compiler.
+`ts-factory` is a **hand-written, dependency-free re-implementation** of the
+legacy TypeScript AST factory (`ts.factory`) and printer (`ts.Printer`), so AST
+based source code generation keeps working after a project's tool-chain migrates
+to the TypeScript-Go (tsgo, `>= 7.x`) native compiler — where the JavaScript
+`ts.factory` / `ts.Printer` API no longer exists.
 
-The public contract is intentionally identical to the legacy TypeScript API:
+The public contract mirrors the legacy factory ergonomics:
 
 ```typescript
-import factory, { TsFactoryPrinter, ts } from "ts-factory";
+import factory, { TsFactoryPrinter, SyntaxKind, NodeFlags } from "ts-factory";
 ```
 
-- `factory` (default export) — the legacy `ts.NodeFactory` (`ts.factory`) verbatim.
-- `TsFactoryPrinter` — an ergonomic wrapper around `ts.createPrinter()`.
-- `ts` — the legacy `typescript` namespace, for enums and type definitions.
+- `factory` (default export) — the node factory; `createXxx` methods mirror the
+  legacy signatures and return outline AST nodes.
+- `TsFactoryPrinter` — renders factory nodes to TypeScript source text.
+- `SyntaxKind` / `NodeFlags` — outline token & flag enums.
+- Outline AST types (`Expression`, `Statement`, `TypeNode`, `Node`, ...).
+
+## Critical constraint — never `import ts`
+
+The whole point is to NOT depend on the `typescript` module. **Do not** add
+`typescript` (or `@typescript/native-preview`) as a runtime dependency, and do
+not `import ts from "typescript"` anywhere under `src/`. The factory and printer
+logic must be implemented directly. The package ships with **zero runtime
+dependencies**.
 
 ## Layout
 
 This is a [pnpm](https://pnpm.io) workspace.
 
 - `packages/ts-factory` — the published package (`src/` → `lib/`).
+  - `src/syntax.ts` — `SyntaxKind`, `NodeFlags`, token-to-text rendering.
+  - `src/ast.ts` — outline node types (category markers + concretes).
+  - `src/factory.ts` — the `factory` builders.
+  - `src/TsFactoryPrinter.ts` — the recursive printer.
 - `config` — shared `tsconfig.json` and `rollup.config.mjs`.
 - `tests/test-factory` — dependency-free behavior tests (`test_*` features).
-
-## Self-contained — zero runtime dependencies
-
-The published package must NOT depend on the external `typescript` module at
-runtime. That dependency is exactly what the TypeScript-Go era removes, so
-`ts-factory` **embeds its own copy** of the legacy compiler's factory/printer:
-
-- `typescript` (`~6.x`, pinned via the `typescript` pnpm catalog) is a
-  **devDependency only**.
-- The build pipeline (`packages/ts-factory`):
-  1. `ttsc` compiles `src/` to an **ESM** intermediate in `bin/` (the ESM format
-     is what lets rollup preserve our named exports).
-  2. `rollup` bundles `bin/index.js` into `lib/index.js` (CJS) and
-     `lib/index.mjs` (ESM), **inlining the entire `typescript` implementation**.
-     Only Node.js built-ins stay external.
-  3. `scripts/postbuild.mjs` vendors `typescript.d.ts` into `lib/`, rewrites every
-     `"typescript"` specifier in the emitted `.d.ts` to `"./typescript"`, and
-     regenerates `ThirdPartyNotices.txt` (TypeScript is Apache-2.0).
-- `tests/test-factory` has a `test_bundle_self_contained` guard asserting the
-  built bundle never `require("typescript")`. Keep it green.
 
 ## Conventions
 
 - **Language**: TypeScript, `strict`. Built with `ttsc` (tsgo) + `rollup`.
 - **Formatting**: `prettier` (`pnpm format`). 80 columns, 2 spaces, trailing commas.
-- **Public API**: keep it identical to the legacy TypeScript interface. Add
-  ergonomics (like `TsFactoryPrinter`) as additive wrappers, never by diverging
-  the underlying factory/printer semantics.
+- **Public API**: keep `createXxx` names and parameter order aligned with the
+  legacy `ts.factory`. Extend coverage by adding the node to `src/ast.ts`,
+  a builder in `src/factory.ts`, and a `case` in `TsFactoryPrinter.emit`.
 
 ## Commands
 
