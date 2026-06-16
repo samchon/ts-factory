@@ -10,6 +10,7 @@ import type { ExportSpecifier } from "./ExportSpecifier";
 export interface NamedExports {
   /** Discriminant tag; always `"NamedExports"`. */
   kind: "NamedExports";
+
   /** The exported specifiers. */
   elements: readonly ExportSpecifier[];
 }

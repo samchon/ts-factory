@@ -11,8 +11,10 @@ import type { VariableDeclarationList } from "./VariableDeclarationList";
 export interface VariableStatement {
   /** Discriminant tag; always `"VariableStatement"`. */
   kind: "VariableStatement";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The declaration list. */
   declarationList: VariableDeclarationList;
 }

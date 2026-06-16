@@ -12,10 +12,13 @@ import type { TypeParameterDeclaration } from "./TypeParameterDeclaration";
 export interface FunctionTypeNode {
   /** Discriminant tag; always `"FunctionTypeNode"`. */
   kind: "FunctionTypeNode";
+
   /** The generic type parameters, if any. */
   typeParameters?: readonly TypeParameterDeclaration[];
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The type. */
   type: TypeNode;
 }

@@ -10,6 +10,7 @@ import type { Expression } from "./Expression";
 export interface TypeOfExpression {
   /** Discriminant tag; always `"TypeOfExpression"`. */
   kind: "TypeOfExpression";
+
   /** The expression. */
   expression: Expression;
 }

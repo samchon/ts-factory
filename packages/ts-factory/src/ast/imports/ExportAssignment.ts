@@ -11,10 +11,13 @@ import type { ModifierLike } from "../names/ModifierLike";
 export interface ExportAssignment {
   /** Discriminant tag; always `"ExportAssignment"`. */
   kind: "ExportAssignment";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** When `true`, emit `export =`; otherwise `export default`. */
   isExportEquals?: boolean;
+
   /** The expression. */
   expression: Expression;
 }

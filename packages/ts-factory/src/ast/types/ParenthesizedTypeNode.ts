@@ -10,6 +10,7 @@ import type { TypeNode } from "./TypeNode";
 export interface ParenthesizedTypeNode {
   /** Discriminant tag; always `"ParenthesizedTypeNode"`. */
   kind: "ParenthesizedTypeNode";
+
   /** The type. */
   type: TypeNode;
 }

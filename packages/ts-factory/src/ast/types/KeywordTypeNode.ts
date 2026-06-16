@@ -10,6 +10,7 @@ import type { SyntaxKind } from "../../syntax";
 export interface KeywordTypeNode {
   /** Discriminant tag; always `"KeywordTypeNode"`. */
   kind: "KeywordTypeNode";
+
   /** The keyword token (e.g. `string`, `number`, `void`). */
   keyword: SyntaxKind;
 }

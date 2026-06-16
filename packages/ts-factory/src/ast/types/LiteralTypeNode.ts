@@ -13,6 +13,7 @@ import type { Token } from "../names/Token";
 export interface LiteralTypeNode {
   /** Discriminant tag; always `"LiteralTypeNode"`. */
   kind: "LiteralTypeNode";
+
   /** The literal. */
   literal: StringLiteral | NumericLiteral | BigIntLiteral | Token;
 }

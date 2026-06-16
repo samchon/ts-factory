@@ -10,6 +10,7 @@ import type { Expression } from "./Expression";
 export interface AwaitExpression {
   /** Discriminant tag; always `"AwaitExpression"`. */
   kind: "AwaitExpression";
+
   /** The expression. */
   expression: Expression;
 }

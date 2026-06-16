@@ -11,10 +11,13 @@ import type { Expression } from "./Expression";
 export interface CallExpression {
   /** Discriminant tag; always `"CallExpression"`. */
   kind: "CallExpression";
+
   /** The expression. */
   expression: Expression;
+
   /** The generic type arguments, if any. */
   typeArguments?: readonly TypeNode[];
+
   /** The arguments. */
   arguments: readonly Expression[];
 }

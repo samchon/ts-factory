@@ -11,8 +11,10 @@ import type { PropertyName } from "../names/PropertyName";
 export interface EnumMember {
   /** Discriminant tag; always `"EnumMember"`. */
   kind: "EnumMember";
+
   /** The name. */
   name: PropertyName;
+
   /** The initializer, if any. */
   initializer?: Expression;
 }

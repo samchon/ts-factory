@@ -10,6 +10,7 @@ import type { TypeNode } from "./TypeNode";
 export interface IntersectionTypeNode {
   /** Discriminant tag; always `"IntersectionTypeNode"`. */
   kind: "IntersectionTypeNode";
+
   /** The intersection constituents. */
   types: readonly TypeNode[];
 }

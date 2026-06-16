@@ -8,6 +8,7 @@
 export interface BigIntLiteral {
   /** Discriminant tag; always `"BigIntLiteral"`. */
   kind: "BigIntLiteral";
+
   /** The BigInt literal text, including the trailing `n`. */
   text: string;
 }

@@ -14,14 +14,19 @@ import type { TypeNode } from "../types/TypeNode";
 export interface PropertyDeclaration {
   /** Discriminant tag; always `"PropertyDeclaration"`. */
   kind: "PropertyDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: PropertyName;
+
   /** The optional (`?`) or definite-assignment (`!`) marker, if any. */
   questionOrExclamationToken?: Token;
+
   /** The type. */
   type?: TypeNode;
+
   /** The initializer, if any. */
   initializer?: Expression;
 }

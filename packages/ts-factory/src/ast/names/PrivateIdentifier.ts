@@ -8,6 +8,7 @@
 export interface PrivateIdentifier {
   /** Discriminant tag; always `"PrivateIdentifier"`. */
   kind: "PrivateIdentifier";
+
   /** The private name, including the leading `#`. */
   text: string;
 }

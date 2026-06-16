@@ -10,6 +10,7 @@ import type { Expression } from "./Expression";
 export interface ParenthesizedExpression {
   /** Discriminant tag; always `"ParenthesizedExpression"`. */
   kind: "ParenthesizedExpression";
+
   /** The expression. */
   expression: Expression;
 }

@@ -8,6 +8,7 @@
 export interface NumericLiteral {
   /** Discriminant tag; always `"NumericLiteral"`. */
   kind: "NumericLiteral";
+
   /** The numeric literal text. */
   text: string;
 }

@@ -10,8 +10,10 @@ import type { TypeNode } from "./TypeNode";
 export interface IndexedAccessTypeNode {
   /** Discriminant tag; always `"IndexedAccessTypeNode"`. */
   kind: "IndexedAccessTypeNode";
+
   /** The object type. */
   objectType: TypeNode;
+
   /** The index type. */
   indexType: TypeNode;
 }

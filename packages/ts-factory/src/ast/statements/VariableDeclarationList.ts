@@ -11,8 +11,10 @@ import type { VariableDeclaration } from "./VariableDeclaration";
 export interface VariableDeclarationList {
   /** Discriminant tag; always `"VariableDeclarationList"`. */
   kind: "VariableDeclarationList";
+
   /** The declarations. */
   declarations: readonly VariableDeclaration[];
+
   /** Whether the list is `const`, `let`, or `var`. */
   flags: NodeFlags;
 }

@@ -10,8 +10,10 @@ import type { Statement } from "./Statement";
 export interface Block {
   /** Discriminant tag; always `"Block"`. */
   kind: "Block";
+
   /** The statements. */
   statements: readonly Statement[];
+
   /** When `true`, print one entry per line. */
   multiLine?: boolean;
 }

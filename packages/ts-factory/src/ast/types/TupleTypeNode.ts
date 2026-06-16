@@ -10,6 +10,7 @@ import type { TypeNode } from "./TypeNode";
 export interface TupleTypeNode {
   /** Discriminant tag; always `"TupleTypeNode"`. */
   kind: "TupleTypeNode";
+
   /** The tuple element types. */
   elements: readonly TypeNode[];
 }

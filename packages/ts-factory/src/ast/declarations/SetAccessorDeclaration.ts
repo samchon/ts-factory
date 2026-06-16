@@ -13,12 +13,16 @@ import type { Block } from "../statements/Block";
 export interface SetAccessorDeclaration {
   /** Discriminant tag; always `"SetAccessorDeclaration"`. */
   kind: "SetAccessorDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: PropertyName;
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The body. */
   body?: Block;
 }

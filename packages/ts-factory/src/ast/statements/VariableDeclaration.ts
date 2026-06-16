@@ -13,12 +13,16 @@ import type { TypeNode } from "../types/TypeNode";
 export interface VariableDeclaration {
   /** Discriminant tag; always `"VariableDeclaration"`. */
   kind: "VariableDeclaration";
+
   /** The name. */
   name: Identifier;
+
   /** The definite-assignment marker (`!`), if any. */
   exclamationToken?: Token;
+
   /** The type. */
   type?: TypeNode;
+
   /** The initializer, if any. */
   initializer?: Expression;
 }

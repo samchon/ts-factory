@@ -11,8 +11,10 @@ import type { TypeNode } from "./TypeNode";
 export interface TypeReferenceNode {
   /** Discriminant tag; always `"TypeReferenceNode"`. */
   kind: "TypeReferenceNode";
+
   /** The referenced type name. */
   typeName: EntityName;
+
   /** The generic type arguments, if any. */
   typeArguments?: readonly TypeNode[];
 }

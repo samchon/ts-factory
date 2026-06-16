@@ -11,8 +11,10 @@ import type { Expression } from "./Expression";
 export interface PropertyAssignment {
   /** Discriminant tag; always `"PropertyAssignment"`. */
   kind: "PropertyAssignment";
+
   /** The name. */
   name: PropertyName;
+
   /** The initializer, if any. */
   initializer: Expression;
 }

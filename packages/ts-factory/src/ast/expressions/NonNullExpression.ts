@@ -10,6 +10,7 @@ import type { Expression } from "./Expression";
 export interface NonNullExpression {
   /** Discriminant tag; always `"NonNullExpression"`. */
   kind: "NonNullExpression";
+
   /** The expression. */
   expression: Expression;
 }

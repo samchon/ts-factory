@@ -11,8 +11,10 @@ import type { Identifier } from "./Identifier";
 export interface QualifiedName {
   /** Discriminant tag; always `"QualifiedName"`. */
   kind: "QualifiedName";
+
   /** The left-hand qualifier. */
   left: EntityName;
+
   /** The right-hand identifier. */
   right: Identifier;
 }

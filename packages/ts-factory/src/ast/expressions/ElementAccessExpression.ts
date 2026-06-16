@@ -10,8 +10,10 @@ import type { Expression } from "./Expression";
 export interface ElementAccessExpression {
   /** Discriminant tag; always `"ElementAccessExpression"`. */
   kind: "ElementAccessExpression";
+
   /** The expression. */
   expression: Expression;
+
   /** The index or key expression. */
   argumentExpression: Expression;
 }

@@ -13,12 +13,16 @@ import type { TypeParameterDeclaration } from "../types/TypeParameterDeclaration
 export interface TypeAliasDeclaration {
   /** Discriminant tag; always `"TypeAliasDeclaration"`. */
   kind: "TypeAliasDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: Identifier;
+
   /** The generic type parameters, if any. */
   typeParameters?: readonly TypeParameterDeclaration[];
+
   /** The type. */
   type: TypeNode;
 }

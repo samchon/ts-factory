@@ -12,8 +12,10 @@ import type { Expression } from "./Expression";
 export interface PropertyAccessExpression {
   /** Discriminant tag; always `"PropertyAccessExpression"`. */
   kind: "PropertyAccessExpression";
+
   /** The expression. */
   expression: Expression;
+
   /** The name. */
   name: Identifier | PrivateIdentifier;
 }

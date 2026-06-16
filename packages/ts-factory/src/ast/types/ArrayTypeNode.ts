@@ -10,6 +10,7 @@ import type { TypeNode } from "./TypeNode";
 export interface ArrayTypeNode {
   /** Discriminant tag; always `"ArrayTypeNode"`. */
   kind: "ArrayTypeNode";
+
   /** The element type. */
   elementType: TypeNode;
 }

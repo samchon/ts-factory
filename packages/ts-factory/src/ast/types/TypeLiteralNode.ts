@@ -10,6 +10,7 @@ import type { TypeElement } from "./TypeElement";
 export interface TypeLiteralNode {
   /** Discriminant tag; always `"TypeLiteralNode"`. */
   kind: "TypeLiteralNode";
+
   /** The members. */
   members: readonly TypeElement[];
 }

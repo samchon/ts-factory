@@ -11,8 +11,10 @@ import type { Expression } from "./Expression";
 export interface AsExpression {
   /** Discriminant tag; always `"AsExpression"`. */
   kind: "AsExpression";
+
   /** The expression. */
   expression: Expression;
+
   /** The type. */
   type: TypeNode;
 }

@@ -11,8 +11,10 @@ import type { TypeNode } from "./TypeNode";
 export interface ExpressionWithTypeArguments {
   /** Discriminant tag; always `"ExpressionWithTypeArguments"`. */
   kind: "ExpressionWithTypeArguments";
+
   /** The expression. */
   expression: Expression;
+
   /** The generic type arguments, if any. */
   typeArguments?: readonly TypeNode[];
 }

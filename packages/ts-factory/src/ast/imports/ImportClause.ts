@@ -12,10 +12,13 @@ import type { NamespaceImport } from "./NamespaceImport";
 export interface ImportClause {
   /** Discriminant tag; always `"ImportClause"`. */
   kind: "ImportClause";
+
   /** Whether this is a type-only import/export. */
   isTypeOnly: boolean;
+
   /** The name. */
   name?: Identifier;
+
   /** The named or namespace bindings, if any. */
   namedBindings?: NamedImports | NamespaceImport;
 }

@@ -10,6 +10,7 @@ import type { Expression } from "../expressions/Expression";
 export interface Decorator {
   /** Discriminant tag; always `"Decorator"`. */
   kind: "Decorator";
+
   /** The decorator expression (after the `@`). */
   expression: Expression;
 }

@@ -11,8 +11,10 @@ import type { Expression } from "./Expression";
 export interface PostfixUnaryExpression {
   /** Discriminant tag; always `"PostfixUnaryExpression"`. */
   kind: "PostfixUnaryExpression";
+
   /** The operand. */
   operand: Expression;
+
   /** The operator token. */
   operator: SyntaxKind;
 }

@@ -11,10 +11,13 @@ import type { Expression } from "./Expression";
 export interface BinaryExpression {
   /** Discriminant tag; always `"BinaryExpression"`. */
   kind: "BinaryExpression";
+
   /** The left-hand operand. */
   left: Expression;
+
   /** The operator token. */
   operator: SyntaxKind;
+
   /** The right-hand operand. */
   right: Expression;
 }

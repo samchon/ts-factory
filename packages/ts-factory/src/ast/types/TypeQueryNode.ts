@@ -10,6 +10,7 @@ import type { EntityName } from "../names/EntityName";
 export interface TypeQueryNode {
   /** Discriminant tag; always `"TypeQueryNode"`. */
   kind: "TypeQueryNode";
+
   /** The queried entity name. */
   exprName: EntityName;
 }

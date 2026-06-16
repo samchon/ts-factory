@@ -10,8 +10,10 @@ import type { Expression } from "./Expression";
 export interface ArrayLiteralExpression {
   /** Discriminant tag; always `"ArrayLiteralExpression"`. */
   kind: "ArrayLiteralExpression";
+
   /** The array elements. */
   elements: readonly Expression[];
+
   /** When `true`, print one entry per line. */
   multiLine?: boolean;
 }

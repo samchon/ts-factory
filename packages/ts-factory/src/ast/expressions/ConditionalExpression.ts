@@ -10,10 +10,13 @@ import type { Expression } from "./Expression";
 export interface ConditionalExpression {
   /** Discriminant tag; always `"ConditionalExpression"`. */
   kind: "ConditionalExpression";
+
   /** The condition. */
   condition: Expression;
+
   /** The value when the condition holds. */
   whenTrue: Expression;
+
   /** The value otherwise. */
   whenFalse: Expression;
 }

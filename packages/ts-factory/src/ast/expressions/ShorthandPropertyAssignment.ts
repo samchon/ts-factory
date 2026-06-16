@@ -11,8 +11,10 @@ import type { Expression } from "./Expression";
 export interface ShorthandPropertyAssignment {
   /** Discriminant tag; always `"ShorthandPropertyAssignment"`. */
   kind: "ShorthandPropertyAssignment";
+
   /** The name. */
   name: Identifier;
+
   /** The default value for object destructuring, if any. */
   objectAssignmentInitializer?: Expression;
 }

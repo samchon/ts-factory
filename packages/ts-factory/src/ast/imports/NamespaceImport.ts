@@ -10,6 +10,7 @@ import type { Identifier } from "../names/Identifier";
 export interface NamespaceImport {
   /** Discriminant tag; always `"NamespaceImport"`. */
   kind: "NamespaceImport";
+
   /** The name. */
   name: Identifier;
 }

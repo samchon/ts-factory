@@ -10,6 +10,7 @@ import type { TypeNode } from "./TypeNode";
 export interface UnionTypeNode {
   /** Discriminant tag; always `"UnionTypeNode"`. */
   kind: "UnionTypeNode";
+
   /** The union constituents. */
   types: readonly TypeNode[];
 }

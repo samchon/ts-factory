@@ -9,6 +9,7 @@
 export interface Identifier {
   /** Discriminant tag; always `"Identifier"`. */
   kind: "Identifier";
+
   /** The identifier text. */
   text: string;
 }

@@ -10,6 +10,7 @@ import type { Statement } from "../statements/Statement";
 export interface SourceFile {
   /** Discriminant tag; always `"SourceFile"`. */
   kind: "SourceFile";
+
   /** The top-level statements. */
   statements: readonly Statement[];
 }

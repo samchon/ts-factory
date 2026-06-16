@@ -12,10 +12,13 @@ import type { TypeNode } from "./TypeNode";
 export interface IndexSignatureDeclaration {
   /** Discriminant tag; always `"IndexSignature"`. */
   kind: "IndexSignature";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The type. */
   type: TypeNode;
 }

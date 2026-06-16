@@ -10,6 +10,7 @@ import type { SyntaxKind } from "../../syntax";
 export interface Token<TKind extends SyntaxKind = SyntaxKind> {
   /** Discriminant tag; always `"Token"`. */
   kind: "Token";
+
   /** The token kind. */
   token: TKind;
 }

@@ -12,10 +12,13 @@ import type { Block } from "../statements/Block";
 export interface ConstructorDeclaration {
   /** Discriminant tag; always `"ConstructorDeclaration"`. */
   kind: "ConstructorDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The body. */
   body?: Block;
 }

@@ -11,8 +11,10 @@ import type { TypeNode } from "./TypeNode";
 export interface TypeOperatorNode {
   /** Discriminant tag; always `"TypeOperatorNode"`. */
   kind: "TypeOperatorNode";
+
   /** The operator token. */
   operator: SyntaxKind;
+
   /** The type. */
   type: TypeNode;
 }

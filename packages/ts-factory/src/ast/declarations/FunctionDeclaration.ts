@@ -16,18 +16,25 @@ import type { TypeParameterDeclaration } from "../types/TypeParameterDeclaration
 export interface FunctionDeclaration {
   /** Discriminant tag; always `"FunctionDeclaration"`. */
   kind: "FunctionDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The generator marker (`*`), if any. */
   asteriskToken?: Token;
+
   /** The name. */
   name?: Identifier;
+
   /** The generic type parameters, if any. */
   typeParameters?: readonly TypeParameterDeclaration[];
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The type. */
   type?: TypeNode;
+
   /** The body. */
   body?: Block;
 }

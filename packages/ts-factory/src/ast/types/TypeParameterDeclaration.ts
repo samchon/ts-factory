@@ -12,12 +12,16 @@ import type { TypeNode } from "./TypeNode";
 export interface TypeParameterDeclaration {
   /** Discriminant tag; always `"TypeParameterDeclaration"`. */
   kind: "TypeParameterDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: Identifier;
+
   /** The `extends` constraint, if any. */
   constraint?: TypeNode;
+
   /** The default type, if any. */
   default?: TypeNode;
 }

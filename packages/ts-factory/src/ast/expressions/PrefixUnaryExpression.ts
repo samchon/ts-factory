@@ -11,8 +11,10 @@ import type { Expression } from "./Expression";
 export interface PrefixUnaryExpression {
   /** Discriminant tag; always `"PrefixUnaryExpression"`. */
   kind: "PrefixUnaryExpression";
+
   /** The operator token. */
   operator: SyntaxKind;
+
   /** The operand. */
   operand: Expression;
 }

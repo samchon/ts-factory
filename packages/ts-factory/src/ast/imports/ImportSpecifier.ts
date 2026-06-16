@@ -10,10 +10,13 @@ import type { Identifier } from "../names/Identifier";
 export interface ImportSpecifier {
   /** Discriminant tag; always `"ImportSpecifier"`. */
   kind: "ImportSpecifier";
+
   /** Whether this is a type-only import/export. */
   isTypeOnly: boolean;
+
   /** The original (source) name, when aliased. */
   propertyName?: Identifier;
+
   /** The name. */
   name: Identifier;
 }

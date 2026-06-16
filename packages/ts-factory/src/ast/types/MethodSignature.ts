@@ -15,16 +15,22 @@ import type { TypeParameterDeclaration } from "./TypeParameterDeclaration";
 export interface MethodSignature {
   /** Discriminant tag; always `"MethodSignature"`. */
   kind: "MethodSignature";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: PropertyName;
+
   /** The optional marker (`?`), if any. */
   questionToken?: Token;
+
   /** The generic type parameters, if any. */
   typeParameters?: readonly TypeParameterDeclaration[];
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The type. */
   type?: TypeNode;
 }

@@ -10,8 +10,10 @@ import type { ObjectLiteralElement } from "./ObjectLiteralElement";
 export interface ObjectLiteralExpression {
   /** Discriminant tag; always `"ObjectLiteralExpression"`. */
   kind: "ObjectLiteralExpression";
+
   /** The properties. */
   properties: readonly ObjectLiteralElement[];
+
   /** When `true`, print one entry per line. */
   multiLine?: boolean;
 }

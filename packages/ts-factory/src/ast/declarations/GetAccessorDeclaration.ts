@@ -14,14 +14,19 @@ import type { TypeNode } from "../types/TypeNode";
 export interface GetAccessorDeclaration {
   /** Discriminant tag; always `"GetAccessorDeclaration"`. */
   kind: "GetAccessorDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: PropertyName;
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The type. */
   type?: TypeNode;
+
   /** The body. */
   body?: Block;
 }

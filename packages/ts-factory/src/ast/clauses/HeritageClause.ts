@@ -11,8 +11,10 @@ import type { ExpressionWithTypeArguments } from "../types/ExpressionWithTypeArg
 export interface HeritageClause {
   /** Discriminant tag; always `"HeritageClause"`. */
   kind: "HeritageClause";
+
   /** Either `extends` or `implements`. */
   token: SyntaxKind;
+
   /** The referenced base types. */
   types: readonly ExpressionWithTypeArguments[];
 }

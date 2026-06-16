@@ -14,16 +14,22 @@ import type { TypeNode } from "../types/TypeNode";
 export interface ParameterDeclaration {
   /** Discriminant tag; always `"ParameterDeclaration"`. */
   kind: "ParameterDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The rest marker (`...`), if any. */
   dotDotDotToken?: Token;
+
   /** The name. */
   name: Identifier;
+
   /** The optional marker (`?`), if any. */
   questionToken?: Token;
+
   /** The type. */
   type?: TypeNode;
+
   /** The initializer, if any. */
   initializer?: Expression;
 }

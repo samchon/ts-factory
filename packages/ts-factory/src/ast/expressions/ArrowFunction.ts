@@ -15,14 +15,19 @@ import type { Expression } from "./Expression";
 export interface ArrowFunction {
   /** Discriminant tag; always `"ArrowFunction"`. */
   kind: "ArrowFunction";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The generic type parameters, if any. */
   typeParameters?: readonly TypeParameterDeclaration[];
+
   /** The parameters. */
   parameters: readonly ParameterDeclaration[];
+
   /** The type. */
   type?: TypeNode;
+
   /** The body. */
   body: Block | Expression;
 }

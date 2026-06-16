@@ -11,10 +11,13 @@ import type { Statement } from "./Statement";
 export interface IfStatement {
   /** Discriminant tag; always `"IfStatement"`. */
   kind: "IfStatement";
+
   /** The expression. */
   expression: Expression;
+
   /** The statement run when the condition holds. */
   thenStatement: Statement;
+
   /** The statement run otherwise, if any. */
   elseStatement?: Statement;
 }

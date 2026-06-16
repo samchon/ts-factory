@@ -10,6 +10,7 @@ import type { Expression } from "./Expression";
 export interface SpreadAssignment {
   /** Discriminant tag; always `"SpreadAssignment"`. */
   kind: "SpreadAssignment";
+
   /** The expression. */
   expression: Expression;
 }

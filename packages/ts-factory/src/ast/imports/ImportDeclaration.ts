@@ -12,10 +12,13 @@ import type { ImportClause } from "./ImportClause";
 export interface ImportDeclaration {
   /** Discriminant tag; always `"ImportDeclaration"`. */
   kind: "ImportDeclaration";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The import clause; omitted for a side-effect-only import. */
   importClause?: ImportClause;
+
   /** The module specifier (the `from` target). */
   moduleSpecifier: Expression;
 }

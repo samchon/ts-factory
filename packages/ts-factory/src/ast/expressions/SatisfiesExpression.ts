@@ -11,8 +11,10 @@ import type { Expression } from "./Expression";
 export interface SatisfiesExpression {
   /** Discriminant tag; always `"SatisfiesExpression"`. */
   kind: "SatisfiesExpression";
+
   /** The expression. */
   expression: Expression;
+
   /** The type. */
   type: TypeNode;
 }

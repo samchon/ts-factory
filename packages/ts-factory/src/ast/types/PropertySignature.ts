@@ -13,12 +13,16 @@ import type { TypeNode } from "./TypeNode";
 export interface PropertySignature {
   /** Discriminant tag; always `"PropertySignature"`. */
   kind: "PropertySignature";
+
   /** The leading modifiers and decorators, if any. */
   modifiers?: readonly ModifierLike[];
+
   /** The name. */
   name: PropertyName;
+
   /** The optional marker (`?`), if any. */
   questionToken?: Token;
+
   /** The type. */
   type?: TypeNode;
 }
