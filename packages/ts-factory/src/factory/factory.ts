@@ -47,6 +47,8 @@ import { createExponent } from "./expressions/createExponent";
 import { createFunctionExpression } from "./expressions/createFunctionExpression";
 import { createGreaterThan } from "./expressions/createGreaterThan";
 import { createGreaterThanEquals } from "./expressions/createGreaterThanEquals";
+import { createImmediatelyInvokedArrowFunction } from "./expressions/createImmediatelyInvokedArrowFunction";
+import { createImmediatelyInvokedFunctionExpression } from "./expressions/createImmediatelyInvokedFunctionExpression";
 import { createInequality } from "./expressions/createInequality";
 import { createLeftShift } from "./expressions/createLeftShift";
 import { createLessThan } from "./expressions/createLessThan";
@@ -244,6 +246,8 @@ export const factory = {
   createFunctionExpression,
   createGreaterThan,
   createGreaterThanEquals,
+  createImmediatelyInvokedArrowFunction,
+  createImmediatelyInvokedFunctionExpression,
   createInequality,
   createLeftShift,
   createLessThan,
