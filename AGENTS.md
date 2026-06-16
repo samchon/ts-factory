@@ -33,20 +33,28 @@ dependencies**.
 This is a [pnpm](https://pnpm.io) workspace.
 
 - `packages/ts-factory` — the published package (`src/` → `lib/`).
-  - `src/syntax.ts` — `SyntaxKind`, `NodeFlags`, token-to-text rendering.
-  - `src/ast.ts` — outline node types (category markers + concretes).
-  - `src/factory.ts` — the `factory` builders.
-  - `src/TsFactoryPrinter.ts` — the recursive printer.
+  - `src/syntax/` — `SyntaxKind`, `NodeFlags`, `tokenToString` (one per file).
+  - `src/ast/` — outline node types, **one exported interface/type per file**,
+    grouped into `names/ expressions/ types/ statements/ declarations/ clauses/
+    imports/ file/`. `Node.ts` is the root; `index.ts` is the barrel.
+  - `src/factory/` — the builders, **one exported function per file**, grouped
+    the same way; `internal/` holds the `make` / `asName` helpers; `factory.ts`
+    assembles the `factory` object; `index.ts` is the barrel.
+  - `src/TsFactoryPrinter.ts` — the recursive printer (a single class).
 - `config` — shared `tsconfig.json` and `rollup.config.mjs`.
 - `tests/test-factory` — dependency-free behavior tests (`test_*` features).
 
 ## Conventions
 
 - **Language**: TypeScript, `strict`. Built with `ttsc` (tsgo) + `rollup`.
+- **One exported symbol per file.** Every exported interface/type lives in its
+  own file under `src/ast/<category>/`, and every exported function in its own
+  file under `src/factory/<category>/`, named exactly after the symbol.
 - **Formatting**: `prettier` (`pnpm format`). 80 columns, 2 spaces, trailing commas.
 - **Public API**: keep `createXxx` names and parameter order aligned with the
-  legacy `ts.factory`. Extend coverage by adding the node to `src/ast.ts`,
-  a builder in `src/factory.ts`, and a `case` in `TsFactoryPrinter.emit`.
+  legacy `ts.factory`. To extend coverage, add the node type under `src/ast/`,
+  its builder under `src/factory/` (wire it into `factory/factory.ts`), and a
+  `case` in `TsFactoryPrinter.emit`.
 
 ## Commands
 
