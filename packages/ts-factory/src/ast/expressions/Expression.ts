@@ -11,6 +11,7 @@ import type { ConditionalExpression } from "./ConditionalExpression";
 import type { ElementAccessExpression } from "./ElementAccessExpression";
 import type { FunctionExpression } from "./FunctionExpression";
 import type { NewExpression } from "./NewExpression";
+import type { NoSubstitutionTemplateLiteral } from "./NoSubstitutionTemplateLiteral";
 import type { NonNullExpression } from "./NonNullExpression";
 import type { NumericLiteral } from "./NumericLiteral";
 import type { ObjectLiteralExpression } from "./ObjectLiteralExpression";
@@ -29,27 +30,28 @@ import type { TypeOfExpression } from "./TypeOfExpression";
  * @author Jeongho Nam - https://github.com/samchon
  */
 export type Expression =
-  | StringLiteral
-  | NumericLiteral
-  | BigIntLiteral
   | ArrayLiteralExpression
-  | ObjectLiteralExpression
-  | PropertyAccessExpression
-  | ElementAccessExpression
-  | CallExpression
-  | NewExpression
-  | ParenthesizedExpression
-  | BinaryExpression
-  | PrefixUnaryExpression
-  | PostfixUnaryExpression
-  | ConditionalExpression
   | ArrowFunction
-  | FunctionExpression
   | AsExpression
-  | SatisfiesExpression
-  | NonNullExpression
-  | SpreadElement
   | AwaitExpression
-  | TypeOfExpression
+  | BigIntLiteral
+  | BinaryExpression
+  | CallExpression
+  | ConditionalExpression
+  | ElementAccessExpression
+  | FunctionExpression
   | Identifier
-  | Token;
+  | NewExpression
+  | NoSubstitutionTemplateLiteral
+  | NonNullExpression
+  | NumericLiteral
+  | ObjectLiteralExpression
+  | ParenthesizedExpression
+  | PostfixUnaryExpression
+  | PrefixUnaryExpression
+  | PropertyAccessExpression
+  | SatisfiesExpression
+  | SpreadElement
+  | StringLiteral
+  | Token
+  | TypeOfExpression;

@@ -54,8 +54,12 @@ import { createNamedImports } from "./imports/createNamedImports";
 import { createNamespaceExport } from "./imports/createNamespaceExport";
 import { createNamespaceImport } from "./imports/createNamespaceImport";
 import { createBigIntLiteral } from "./literals/createBigIntLiteral";
+import { createNoSubstitutionTemplateLiteral } from "./literals/createNoSubstitutionTemplateLiteral";
 import { createNumericLiteral } from "./literals/createNumericLiteral";
 import { createStringLiteral } from "./literals/createStringLiteral";
+import { createTemplateHead } from "./literals/createTemplateHead";
+import { createTemplateMiddle } from "./literals/createTemplateMiddle";
+import { createTemplateTail } from "./literals/createTemplateTail";
 import { createDecorator } from "./names/createDecorator";
 import { createFalse } from "./names/createFalse";
 import { createIdentifier } from "./names/createIdentifier";
@@ -92,20 +96,34 @@ import { createVariableStatement } from "./statements/createVariableStatement";
 import { createWhileStatement } from "./statements/createWhileStatement";
 import { createWithStatement } from "./statements/createWithStatement";
 import { createArrayTypeNode } from "./types/createArrayTypeNode";
+import { createCallSignature } from "./types/createCallSignature";
+import { createConditionalTypeNode } from "./types/createConditionalTypeNode";
+import { createConstructSignature } from "./types/createConstructSignature";
+import { createConstructorTypeNode } from "./types/createConstructorTypeNode";
 import { createExpressionWithTypeArguments } from "./types/createExpressionWithTypeArguments";
 import { createFunctionTypeNode } from "./types/createFunctionTypeNode";
+import { createImportTypeNode } from "./types/createImportTypeNode";
 import { createIndexSignature } from "./types/createIndexSignature";
 import { createIndexedAccessTypeNode } from "./types/createIndexedAccessTypeNode";
+import { createInferTypeNode } from "./types/createInferTypeNode";
 import { createIntersectionTypeNode } from "./types/createIntersectionTypeNode";
 import { createKeywordTypeNode } from "./types/createKeywordTypeNode";
 import { createLiteralTypeNode } from "./types/createLiteralTypeNode";
+import { createMappedTypeNode } from "./types/createMappedTypeNode";
 import { createMethodSignature } from "./types/createMethodSignature";
+import { createNamedTupleMember } from "./types/createNamedTupleMember";
+import { createOptionalTypeNode } from "./types/createOptionalTypeNode";
 import { createParenthesizedType } from "./types/createParenthesizedType";
 import { createPropertySignature } from "./types/createPropertySignature";
+import { createRestTypeNode } from "./types/createRestTypeNode";
+import { createTemplateLiteralType } from "./types/createTemplateLiteralType";
+import { createTemplateLiteralTypeSpan } from "./types/createTemplateLiteralTypeSpan";
+import { createThisTypeNode } from "./types/createThisTypeNode";
 import { createTupleTypeNode } from "./types/createTupleTypeNode";
 import { createTypeLiteralNode } from "./types/createTypeLiteralNode";
 import { createTypeOperatorNode } from "./types/createTypeOperatorNode";
 import { createTypeParameterDeclaration } from "./types/createTypeParameterDeclaration";
+import { createTypePredicateNode } from "./types/createTypePredicateNode";
 import { createTypeQueryNode } from "./types/createTypeQueryNode";
 import { createTypeReferenceNode } from "./types/createTypeReferenceNode";
 import { createUnionTypeNode } from "./types/createUnionTypeNode";
@@ -177,8 +195,12 @@ export const factory = {
   createNamespaceExport,
   createNamespaceImport,
   createBigIntLiteral,
+  createNoSubstitutionTemplateLiteral,
   createNumericLiteral,
   createStringLiteral,
+  createTemplateHead,
+  createTemplateMiddle,
+  createTemplateTail,
   createDecorator,
   createFalse,
   createIdentifier,
@@ -215,20 +237,34 @@ export const factory = {
   createWhileStatement,
   createWithStatement,
   createArrayTypeNode,
+  createCallSignature,
+  createConditionalTypeNode,
+  createConstructorTypeNode,
+  createConstructSignature,
   createExpressionWithTypeArguments,
   createFunctionTypeNode,
+  createImportTypeNode,
   createIndexedAccessTypeNode,
   createIndexSignature,
+  createInferTypeNode,
   createIntersectionTypeNode,
   createKeywordTypeNode,
   createLiteralTypeNode,
+  createMappedTypeNode,
   createMethodSignature,
+  createNamedTupleMember,
+  createOptionalTypeNode,
   createParenthesizedType,
   createPropertySignature,
+  createRestTypeNode,
+  createTemplateLiteralType,
+  createTemplateLiteralTypeSpan,
+  createThisTypeNode,
   createTupleTypeNode,
   createTypeLiteralNode,
   createTypeOperatorNode,
   createTypeParameterDeclaration,
+  createTypePredicateNode,
   createTypeQueryNode,
   createTypeReferenceNode,
   createUnionTypeNode,

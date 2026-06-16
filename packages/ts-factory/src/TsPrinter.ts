@@ -934,6 +934,115 @@ export class TsPrinter {
       case "NamespaceExport":
         return concat(["* as ", this.emit(node.name)]);
 
+      /* advanced types */
+      case "ThisTypeNode":
+        return "this";
+      case "ConstructorTypeNode":
+        return concat([
+          this.modifiers(node.modifiers, false),
+          "new ",
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          " => ",
+          this.emit(node.type),
+        ]);
+      case "TypePredicateNode":
+        return concat([
+          node.assertsModifier ? "asserts " : "",
+          this.emit(node.parameterName),
+          node.type ? concat([" is ", this.emit(node.type)]) : "",
+        ]);
+      case "ConditionalTypeNode":
+        return concat([
+          this.emit(node.checkType),
+          " extends ",
+          this.emit(node.extendsType),
+          " ? ",
+          this.emit(node.trueType),
+          " : ",
+          this.emit(node.falseType),
+        ]);
+      case "InferTypeNode":
+        return concat(["infer ", this.emit(node.typeParameter)]);
+      case "MappedTypeNode": {
+        const ro = node.readonlyToken
+          ? tokenToString(node.readonlyToken.token) === "readonly"
+            ? "readonly "
+            : `${tokenToString(node.readonlyToken.token)}readonly `
+          : "";
+        const q = node.questionToken
+          ? tokenToString(node.questionToken.token) === "?"
+            ? "?"
+            : `${tokenToString(node.questionToken.token)}?`
+          : "";
+        return concat([
+          "{ ",
+          ro,
+          "[",
+          this.emit(node.typeParameter.name),
+          " in ",
+          node.typeParameter.constraint
+            ? this.emit(node.typeParameter.constraint)
+            : "",
+          node.nameType ? concat([" as ", this.emit(node.nameType)]) : "",
+          "]",
+          q,
+          node.type ? concat([": ", this.emit(node.type)]) : "",
+          " }",
+        ]);
+      }
+      case "TemplateLiteralType":
+        return concat([
+          this.emit(node.head),
+          concat(node.templateSpans.map((s) => this.emit(s))),
+        ]);
+      case "TemplateLiteralTypeSpan":
+        return concat([this.emit(node.type), this.emit(node.literal)]);
+      case "NamedTupleMember":
+        return concat([
+          node.dotDotDotToken ? "..." : "",
+          this.emit(node.name),
+          node.questionToken ? "?" : "",
+          ": ",
+          this.emit(node.type),
+        ]);
+      case "OptionalTypeNode":
+        return concat([this.emit(node.type), "?"]);
+      case "RestTypeNode":
+        return concat(["...", this.emit(node.type)]);
+      case "ImportTypeNode":
+        return concat([
+          node.isTypeOf ? "typeof " : "",
+          "import(",
+          this.emit(node.argument),
+          ")",
+          node.qualifier ? concat([".", this.emit(node.qualifier)]) : "",
+          this.typeArguments(node.typeArguments),
+        ]);
+      case "CallSignature":
+        return concat([
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+        ]);
+      case "ConstructSignature":
+        return concat([
+          "new ",
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+        ]);
+
+      /* template literals */
+      case "TemplateHead":
+        return concat(["`", node.text, "${"]);
+      case "TemplateMiddle":
+        return concat(["}", node.text, "${"]);
+      case "TemplateTail":
+        return concat(["}", node.text, "`"]);
+      case "NoSubstitutionTemplateLiteral":
+        return concat(["`", node.text, "`"]);
+
       default:
         return this.unsupported(node);
     }

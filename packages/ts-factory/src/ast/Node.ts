@@ -29,6 +29,7 @@ import type { ConditionalExpression } from "./expressions/ConditionalExpression"
 import type { ElementAccessExpression } from "./expressions/ElementAccessExpression";
 import type { FunctionExpression } from "./expressions/FunctionExpression";
 import type { NewExpression } from "./expressions/NewExpression";
+import type { NoSubstitutionTemplateLiteral } from "./expressions/NoSubstitutionTemplateLiteral";
 import type { NonNullExpression } from "./expressions/NonNullExpression";
 import type { NumericLiteral } from "./expressions/NumericLiteral";
 import type { ObjectLiteralExpression } from "./expressions/ObjectLiteralExpression";
@@ -42,6 +43,9 @@ import type { ShorthandPropertyAssignment } from "./expressions/ShorthandPropert
 import type { SpreadAssignment } from "./expressions/SpreadAssignment";
 import type { SpreadElement } from "./expressions/SpreadElement";
 import type { StringLiteral } from "./expressions/StringLiteral";
+import type { TemplateHead } from "./expressions/TemplateHead";
+import type { TemplateMiddle } from "./expressions/TemplateMiddle";
+import type { TemplateTail } from "./expressions/TemplateTail";
 import type { TypeOfExpression } from "./expressions/TypeOfExpression";
 import type { SourceFile } from "./file/SourceFile";
 import type { ExportAssignment } from "./imports/ExportAssignment";
@@ -85,20 +89,34 @@ import type { VariableStatement } from "./statements/VariableStatement";
 import type { WhileStatement } from "./statements/WhileStatement";
 import type { WithStatement } from "./statements/WithStatement";
 import type { ArrayTypeNode } from "./types/ArrayTypeNode";
+import type { CallSignatureDeclaration } from "./types/CallSignatureDeclaration";
+import type { ConditionalTypeNode } from "./types/ConditionalTypeNode";
+import type { ConstructSignatureDeclaration } from "./types/ConstructSignatureDeclaration";
+import type { ConstructorTypeNode } from "./types/ConstructorTypeNode";
 import type { ExpressionWithTypeArguments } from "./types/ExpressionWithTypeArguments";
 import type { FunctionTypeNode } from "./types/FunctionTypeNode";
+import type { ImportTypeNode } from "./types/ImportTypeNode";
 import type { IndexSignatureDeclaration } from "./types/IndexSignatureDeclaration";
 import type { IndexedAccessTypeNode } from "./types/IndexedAccessTypeNode";
+import type { InferTypeNode } from "./types/InferTypeNode";
 import type { IntersectionTypeNode } from "./types/IntersectionTypeNode";
 import type { KeywordTypeNode } from "./types/KeywordTypeNode";
 import type { LiteralTypeNode } from "./types/LiteralTypeNode";
+import type { MappedTypeNode } from "./types/MappedTypeNode";
 import type { MethodSignature } from "./types/MethodSignature";
+import type { NamedTupleMember } from "./types/NamedTupleMember";
+import type { OptionalTypeNode } from "./types/OptionalTypeNode";
 import type { ParenthesizedTypeNode } from "./types/ParenthesizedTypeNode";
 import type { PropertySignature } from "./types/PropertySignature";
+import type { RestTypeNode } from "./types/RestTypeNode";
+import type { TemplateLiteralTypeNode } from "./types/TemplateLiteralTypeNode";
+import type { TemplateLiteralTypeSpan } from "./types/TemplateLiteralTypeSpan";
+import type { ThisTypeNode } from "./types/ThisTypeNode";
 import type { TupleTypeNode } from "./types/TupleTypeNode";
 import type { TypeLiteralNode } from "./types/TypeLiteralNode";
 import type { TypeOperatorNode } from "./types/TypeOperatorNode";
 import type { TypeParameterDeclaration } from "./types/TypeParameterDeclaration";
+import type { TypePredicateNode } from "./types/TypePredicateNode";
 import type { TypeQueryNode } from "./types/TypeQueryNode";
 import type { TypeReferenceNode } from "./types/TypeReferenceNode";
 import type { UnionTypeNode } from "./types/UnionTypeNode";
@@ -120,13 +138,17 @@ export type Node =
   | Block
   | BreakStatement
   | CallExpression
+  | CallSignatureDeclaration
   | CaseBlock
   | CaseClause
   | CatchClause
   | ClassDeclaration
   | ClassStaticBlockDeclaration
   | ConditionalExpression
+  | ConditionalTypeNode
+  | ConstructSignatureDeclaration
   | ConstructorDeclaration
+  | ConstructorTypeNode
   | ContinueStatement
   | DebuggerStatement
   | Decorator
@@ -156,26 +178,32 @@ export type Node =
   | ImportDeclaration
   | ImportEqualsDeclaration
   | ImportSpecifier
+  | ImportTypeNode
   | IndexSignatureDeclaration
   | IndexedAccessTypeNode
+  | InferTypeNode
   | InterfaceDeclaration
   | IntersectionTypeNode
   | KeywordTypeNode
   | LabeledStatement
   | LiteralTypeNode
+  | MappedTypeNode
   | MethodDeclaration
   | MethodSignature
   | ModuleBlock
   | ModuleDeclaration
   | NamedExports
   | NamedImports
+  | NamedTupleMember
   | NamespaceExport
   | NamespaceExportDeclaration
   | NamespaceImport
   | NewExpression
+  | NoSubstitutionTemplateLiteral
   | NonNullExpression
   | NumericLiteral
   | ObjectLiteralExpression
+  | OptionalTypeNode
   | ParameterDeclaration
   | ParenthesizedExpression
   | ParenthesizedTypeNode
@@ -187,6 +215,7 @@ export type Node =
   | PropertyDeclaration
   | PropertySignature
   | QualifiedName
+  | RestTypeNode
   | ReturnStatement
   | SatisfiesExpression
   | SemicolonClassElement
@@ -197,6 +226,12 @@ export type Node =
   | SpreadElement
   | StringLiteral
   | SwitchStatement
+  | TemplateHead
+  | TemplateLiteralTypeNode
+  | TemplateLiteralTypeSpan
+  | TemplateMiddle
+  | TemplateTail
+  | ThisTypeNode
   | ThrowStatement
   | Token
   | TryStatement
@@ -206,6 +241,7 @@ export type Node =
   | TypeOfExpression
   | TypeOperatorNode
   | TypeParameterDeclaration
+  | TypePredicateNode
   | TypeQueryNode
   | TypeReferenceNode
   | UnionTypeNode

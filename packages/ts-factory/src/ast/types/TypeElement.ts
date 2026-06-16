@@ -1,3 +1,5 @@
+import type { CallSignatureDeclaration } from "./CallSignatureDeclaration";
+import type { ConstructSignatureDeclaration } from "./ConstructSignatureDeclaration";
 import type { IndexSignatureDeclaration } from "./IndexSignatureDeclaration";
 import type { MethodSignature } from "./MethodSignature";
 import type { PropertySignature } from "./PropertySignature";
@@ -8,6 +10,8 @@ import type { PropertySignature } from "./PropertySignature";
  * @author Jeongho Nam - https://github.com/samchon
  */
 export type TypeElement =
-  | PropertySignature
+  | CallSignatureDeclaration
+  | ConstructSignatureDeclaration
   | IndexSignatureDeclaration
-  | MethodSignature;
+  | MethodSignature
+  | PropertySignature;
