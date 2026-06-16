@@ -6,7 +6,7 @@
   "scripts": {
     "build": "pnpm --filter=./packages/* -r build",
     "dev": "pnpm --filter=./packages/* -r dev",
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "prettier --write \"**/*.ts\" \"**/*.md\"",
     "test": "pnpm run build && pnpm --filter ./test start",
     "package:latest": "pnpm --filter=./packages/* -r publish --tag latest --access public",
     "package:next": "bash next.bash",

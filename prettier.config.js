@@ -1,6 +1,6 @@
 module.exports = {
-  parser: "typescript",
   printWidth: 80,
+  proseWrap: "never",
   semi: true,
   tabWidth: 2,
   trailingComma: "all",

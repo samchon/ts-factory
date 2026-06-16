@@ -8,7 +8,7 @@ on:
       - '.github/workflows/test.yml'
       - 'config/**'
       - 'packages/**'
-      - 'tests/**'
+      - 'test/**'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'package.json'
