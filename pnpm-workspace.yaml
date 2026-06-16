@@ -1,7 +1,7 @@
 packages:
   - 'config'
   - 'packages/*'
-  - 'tests/*'
+  - 'test'
 catalogs:
   typescript:
     typescript: ~6.0.3

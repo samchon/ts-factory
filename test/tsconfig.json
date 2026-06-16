@@ -1,0 +1,12 @@
+{
+  "extends": "../config/tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "ESNext"],
+    "declaration": false,
+    "sourceMap": false,
+    "noEmit": true,
+    "rootDir": "src"
+  },
+  "include": ["src"]
+}

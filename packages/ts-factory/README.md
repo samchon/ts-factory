@@ -1,16 +1,15 @@
 # `ts-factory`
-[![NPM Version](https://img.shields.io/npm/v/ts-factory.svg)](https://www.npmjs.com/package/ts-factory)
-[![NPM Downloads](https://img.shields.io/npm/dm/ts-factory.svg)](https://www.npmjs.com/package/ts-factory)
-[![GitHub License](https://img.shields.io/github/license/samchon/ts-factory.svg)](https://github.com/samchon/ts-factory/blob/main/LICENSE)
 
-Standalone legacy TypeScript **AST factory** and **printer** for source code generation.
+[![NPM Version](https://img.shields.io/npm/v/ts-factory.svg)](https://www.npmjs.com/package/ts-factory) [![NPM Downloads](https://img.shields.io/npm/dm/ts-factory.svg)](https://www.npmjs.com/package/ts-factory) [![GitHub License](https://img.shields.io/github/license/samchon/ts-factory.svg)](https://github.com/samchon/ts-factory/blob/main/LICENSE)
+
+Hand-written, dependency-free TypeScript **AST factory** and **printer** for source code generation.
 
 ```bash
 npm install ts-factory
 ```
 
 ```typescript
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 const node = factory.createCallExpression(
   factory.createPropertyAccessExpression(
@@ -21,15 +20,14 @@ const node = factory.createCallExpression(
   [factory.createStringLiteral("hello world")],
 );
 
-const printer = new TsFactoryPrinter();
+const printer = new TsPrinter();
 console.log(printer.print(node));
 // console.log("hello world")
 ```
 
 ## Why?
 
-The legacy (`<= 6.x`, JavaScript based) TypeScript compiler exposes a node
-factory and a printer through the JavaScript API:
+The legacy (`<= 6.x`, JavaScript based) TypeScript compiler exposes a node factory and a printer through its JavaScript API:
 
 ```typescript
 import ts from "typescript";
@@ -38,52 +36,60 @@ const node = ts.factory.createStringLiteral("hello");
 const text = ts.createPrinter().printNode(/* ... */);
 ```
 
-Once a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`)
-native compiler, that JavaScript `ts.factory` / `ts.Printer` API is no longer
-available — so AST based code generation built on top of it breaks.
+Once a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`) native compiler, that JavaScript `ts.factory` / `ts.Printer` API is gone — so AST based code generation built on top of it breaks.
 
-`ts-factory` keeps that capability alive. It re-publishes the legacy factory and
-printer **with the exact same API interface** under a stable, dependency-free
-import path, so your code generators keep running regardless of which compiler
-builds the rest of your project.
+`ts-factory` keeps that capability alive **without importing `typescript` at all**. The factory and printer are re-implemented directly, so the package has **zero dependencies** and works no matter which compiler builds the rest of your project.
 
 ## API
 
-| Export                          | Description                                                       |
-| ------------------------------- | ---------------------------------------------------------------- |
-| `factory` (default export)      | The legacy `ts.NodeFactory` (`ts.factory`), identical interface. |
-| `TsFactoryPrinter`              | Ergonomic wrapper around the legacy `ts.Printer`.                |
-| `ts`                            | The legacy `typescript` namespace, for enums and types.          |
+| Export | Description |
+| --- | --- |
+| `factory` (default export) | The node factory; `createXxx` mirror the legacy signatures. |
+| `TsPrinter` | Renders factory nodes to TypeScript source text. |
+| `SyntaxKind`, `NodeFlags` | Outline token & flag enums. |
+| Outline AST types | `Expression`, `Statement`, `TypeNode`, `Node`, ... |
 
 ### `factory`
 
-The default export is the legacy `ts.factory` object verbatim — every
-`createXXX` method behaves exactly as the TypeScript compiler documents.
-
-### `TsFactoryPrinter`
-
-A thin wrapper around `ts.createPrinter()` that hides the boilerplate of picking
-an `EmitHint` and providing a scratch `SourceFile`.
+`createXxx` methods mirror the legacy `ts.factory` names and parameter order, and return plain _outline_ AST nodes (a structural skeleton — just enough to drive the printer).
 
 ```typescript
-const printer = new TsFactoryPrinter(/* ts.PrinterOptions? */);
+import factory, { SyntaxKind } from "ts-factory";
 
-printer.print(node);              // print one synthesized node
-printer.printNodes([a, b, c]);    // print many nodes, joined by new lines
+factory.createKeywordTypeNode(SyntaxKind.StringKeyword); // string
+```
+
+### `TsPrinter`
+
+A **width-aware** printer implemented directly (not a wrapper over `ts.Printer`). Like Prettier, it keeps lists on one line when they fit within `printWidth` and breaks them — with trailing commas — when they don't.
+
+```typescript
+const printer = new TsPrinter({
+  printWidth: 80, // default 80
+  indent: "  ", //   default two spaces
+  newLine: "\n", //  default LineFeed
+});
+
+printer.print(node); // print one node (or a SourceFile)
+printer.printNodes([a, b, c]); // print many nodes, joined by new lines
 printer.printFile(undefined, st); // compose & print a whole source file
-printer.printer;                  // the underlying ts.Printer (escape hatch)
 ```
-
-### `ts`
-
-For the AST building blocks you would normally reach into `typescript` for
-(`ts.SyntaxKind`, `ts.NodeFlags`, type definitions, ...), import them from here:
 
 ```typescript
-import { ts } from "ts-factory";
+// fits on one line → inline
+factory.createCallExpression(id("foo"), undefined, [a, b]); // foo(a, b)
 
-factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword);
+// exceeds printWidth → breaks
+// foo(
+//   argumentOne,
+//   argumentTwo,
+//   argumentThree,
+// )
 ```
+
+## Coverage
+
+The factory and printer cover the constructs most used for code generation: identifiers, literals, the common expressions, types (keyword/reference/union/ intersection/array/tuple/type-literal/function/operator/...), statements, classes & interfaces, enums, functions & arrow functions, and import/export declarations. Coverage is easy to extend — add the node to `ast.ts`, a builder to `factory.ts`, and a `case` to the printer.
 
 ## License
 
