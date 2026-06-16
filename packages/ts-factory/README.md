@@ -1,6 +1,6 @@
-# `ts-factory`
+# ts-factory
 
-[![NPM Version](https://img.shields.io/npm/v/ts-factory.svg)](https://www.npmjs.com/package/ts-factory) [![NPM Downloads](https://img.shields.io/npm/dm/ts-factory.svg)](https://www.npmjs.com/package/ts-factory) [![GitHub License](https://img.shields.io/github/license/samchon/ts-factory.svg)](https://github.com/samchon/ts-factory/blob/main/LICENSE)
+[![NPM Version](https://img.shields.io/npm/v/ts-factory.svg)](https://www.npmjs.com/package/ts-factory) [![NPM Downloads](https://img.shields.io/npm/dm/ts-factory.svg)](https://www.npmjs.com/package/ts-factory) [![GitHub License](https://img.shields.io/github/license/samchon/ts-factory.svg)](https://github.com/samchon/ts-factory/blob/main/LICENSE) [![Build Status](https://github.com/samchon/ts-factory/workflows/build/badge.svg)](https://github.com/samchon/ts-factory/actions?query=workflow%3Abuild)
 
 Hand-written, dependency-free TypeScript **AST factory** and **printer** for source code generation.
 
@@ -51,7 +51,7 @@ Once a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`)
 
 ### `factory`
 
-`createXxx` methods mirror the legacy `ts.factory` names and parameter order, and return plain _outline_ AST nodes (a structural skeleton — just enough to drive the printer).
+`createXxx` methods mirror the legacy `ts.factory` names and parameter order, and return concrete, fully typed _outline_ AST nodes (each with a `kind` discriminant).
 
 ```typescript
 import factory, { SyntaxKind } from "ts-factory";
@@ -89,7 +89,7 @@ factory.createCallExpression(id("foo"), undefined, [a, b]); // foo(a, b)
 
 ## Coverage
 
-The factory and printer cover the constructs most used for code generation: identifiers, literals, the common expressions, types (keyword/reference/union/ intersection/array/tuple/type-literal/function/operator/...), statements, classes & interfaces, enums, functions & arrow functions, and import/export declarations. Coverage is easy to extend — add the node to `ast.ts`, a builder to `factory.ts`, and a `case` to the printer.
+The factory and printer cover the constructs most used for code generation: identifiers, literals, the common expressions, types (keyword / reference / union / intersection / array / tuple / type-literal / function / operator / ...), statements, classes & interfaces, enums, functions & arrow functions, and import / export declarations. Coverage is easy to extend — add the node under `src/ast/`, a builder under `src/factory/`, and a `case` to the printer.
 
 ## License
 

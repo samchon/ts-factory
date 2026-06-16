@@ -4,6 +4,10 @@
 
 Hand-written, dependency-free TypeScript **AST factory** and **printer** for source code generation.
 
+```bash
+npm install ts-factory
+```
+
 ```typescript
 import factory, { TsPrinter } from "ts-factory";
 
@@ -21,26 +25,71 @@ console.log(printer.print(node));
 // console.log("hello world")
 ```
 
-When a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`) native compiler, the legacy JavaScript `ts.factory` / `ts.Printer` API used for AST based code generation is no longer available. `ts-factory` **re-implements that factory and printer directly** — never importing `typescript`, with **zero dependencies** — so your code generators keep working no matter which compiler builds the rest of your project.
+## Why?
 
-See [`packages/ts-factory/README.md`](./packages/ts-factory/README.md) for the full API documentation.
+The legacy (`<= 6.x`, JavaScript based) TypeScript compiler exposes a node factory and a printer through its JavaScript API:
 
-## Development
+```typescript
+import ts from "typescript";
 
-This repository is a [pnpm](https://pnpm.io) workspace.
-
-```bash
-pnpm install   # install dependencies
-pnpm build     # build every package (ttsc + rollup)
-pnpm test      # build, then run the test packages
-pnpm format    # prettier
+const node = ts.factory.createStringLiteral("hello");
+const text = ts.createPrinter().printNode(/* ... */);
 ```
 
-| Path                  | Description                                   |
-| --------------------- | --------------------------------------------- |
-| `packages/ts-factory` | The published `ts-factory` package.           |
-| `config`              | Shared `tsconfig` and `rollup` configuration. |
-| `test`                | Behavior tests for factory and printer.       |
+Once a project migrates its tool-chain to the **TypeScript-Go** (tsgo, `>= 7.x`) native compiler, that JavaScript `ts.factory` / `ts.Printer` API is gone — so AST based code generation built on top of it breaks.
+
+`ts-factory` keeps that capability alive **without importing `typescript` at all**. The factory and printer are re-implemented directly, so the package has **zero dependencies** and works no matter which compiler builds the rest of your project.
+
+## API
+
+| Export | Description |
+| --- | --- |
+| `factory` (default export) | The node factory; `createXxx` mirror the legacy signatures. |
+| `TsPrinter` | Renders factory nodes to TypeScript source text. |
+| `SyntaxKind`, `NodeFlags` | Outline token & flag enums. |
+| Outline AST types | `Expression`, `Statement`, `TypeNode`, `Node`, ... |
+
+### `factory`
+
+`createXxx` methods mirror the legacy `ts.factory` names and parameter order, and return concrete, fully typed _outline_ AST nodes (each with a `kind` discriminant).
+
+```typescript
+import factory, { SyntaxKind } from "ts-factory";
+
+factory.createKeywordTypeNode(SyntaxKind.StringKeyword); // string
+```
+
+### `TsPrinter`
+
+A **width-aware** printer implemented directly (not a wrapper over `ts.Printer`). Like Prettier, it keeps lists on one line when they fit within `printWidth` and breaks them — with trailing commas — when they don't.
+
+```typescript
+const printer = new TsPrinter({
+  printWidth: 80, // default 80
+  indent: "  ", //   default two spaces
+  newLine: "\n", //  default LineFeed
+});
+
+printer.print(node); // print one node (or a SourceFile)
+printer.printNodes([a, b, c]); // print many nodes, joined by new lines
+printer.printFile(undefined, st); // compose & print a whole source file
+```
+
+```typescript
+// fits on one line → inline
+factory.createCallExpression(id("foo"), undefined, [a, b]); // foo(a, b)
+
+// exceeds printWidth → breaks
+// foo(
+//   argumentOne,
+//   argumentTwo,
+//   argumentThree,
+// )
+```
+
+## Coverage
+
+The factory and printer cover the constructs most used for code generation: identifiers, literals, the common expressions, types (keyword / reference / union / intersection / array / tuple / type-literal / function / operator / ...), statements, classes & interfaces, enums, functions & arrow functions, and import / export declarations. Coverage is easy to extend — add the node under `src/ast/`, a builder under `src/factory/`, and a `case` to the printer.
 
 ## License
 
