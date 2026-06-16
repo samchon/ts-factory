@@ -1,7 +1,7 @@
 import type { Expression } from "../expressions/Expression";
 import type { ModifierLike } from "../names/ModifierLike";
 import type { NamedExports } from "./NamedExports";
-import type { NamespaceImport } from "./NamespaceImport";
+import type { NamespaceExport } from "./NamespaceExport";
 
 /**
  * An `export` declaration.
@@ -21,7 +21,7 @@ export interface ExportDeclaration {
   isTypeOnly: boolean;
 
   /** The export clause; omitted for `export *`. */
-  exportClause?: NamedExports | NamespaceImport;
+  exportClause?: NamedExports | NamespaceExport;
 
   /** The module specifier (the `from` target). */
   moduleSpecifier?: Expression;

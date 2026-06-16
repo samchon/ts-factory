@@ -3,7 +3,7 @@ import type {
   Expression,
   ModifierLike,
   NamedExports,
-  NamespaceImport,
+  NamespaceExport,
 } from "../../ast";
 import { make } from "../internal/make";
 import { createStringLiteral } from "../literals/createStringLiteral";
@@ -21,7 +21,7 @@ import { createStringLiteral } from "../literals/createStringLiteral";
 export const createExportDeclaration = (
   modifiers: readonly ModifierLike[] | undefined,
   isTypeOnly: boolean,
-  exportClause: NamedExports | NamespaceImport | undefined,
+  exportClause: NamedExports | NamespaceExport | undefined,
   moduleSpecifier?: Expression | string,
 ): ExportDeclaration =>
   make("ExportDeclaration", {

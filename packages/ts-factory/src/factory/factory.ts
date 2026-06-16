@@ -1,14 +1,21 @@
 import { createHeritageClause } from "./clauses/createHeritageClause";
 import { createParameterDeclaration } from "./clauses/createParameterDeclaration";
 import { createClassDeclaration } from "./declarations/createClassDeclaration";
+import { createClassStaticBlockDeclaration } from "./declarations/createClassStaticBlockDeclaration";
 import { createConstructorDeclaration } from "./declarations/createConstructorDeclaration";
 import { createEnumDeclaration } from "./declarations/createEnumDeclaration";
 import { createEnumMember } from "./declarations/createEnumMember";
+import { createExternalModuleReference } from "./declarations/createExternalModuleReference";
 import { createFunctionDeclaration } from "./declarations/createFunctionDeclaration";
 import { createGetAccessorDeclaration } from "./declarations/createGetAccessorDeclaration";
+import { createImportEqualsDeclaration } from "./declarations/createImportEqualsDeclaration";
 import { createInterfaceDeclaration } from "./declarations/createInterfaceDeclaration";
 import { createMethodDeclaration } from "./declarations/createMethodDeclaration";
+import { createModuleBlock } from "./declarations/createModuleBlock";
+import { createModuleDeclaration } from "./declarations/createModuleDeclaration";
+import { createNamespaceExportDeclaration } from "./declarations/createNamespaceExportDeclaration";
 import { createPropertyDeclaration } from "./declarations/createPropertyDeclaration";
+import { createSemicolonClassElement } from "./declarations/createSemicolonClassElement";
 import { createSetAccessorDeclaration } from "./declarations/createSetAccessorDeclaration";
 import { createTypeAliasDeclaration } from "./declarations/createTypeAliasDeclaration";
 import { createArrayLiteralExpression } from "./expressions/createArrayLiteralExpression";
@@ -44,6 +51,7 @@ import { createImportDeclaration } from "./imports/createImportDeclaration";
 import { createImportSpecifier } from "./imports/createImportSpecifier";
 import { createNamedExports } from "./imports/createNamedExports";
 import { createNamedImports } from "./imports/createNamedImports";
+import { createNamespaceExport } from "./imports/createNamespaceExport";
 import { createNamespaceImport } from "./imports/createNamespaceImport";
 import { createBigIntLiteral } from "./literals/createBigIntLiteral";
 import { createNumericLiteral } from "./literals/createNumericLiteral";
@@ -59,13 +67,30 @@ import { createThis } from "./names/createThis";
 import { createToken } from "./names/createToken";
 import { createTrue } from "./names/createTrue";
 import { createBlock } from "./statements/createBlock";
+import { createBreakStatement } from "./statements/createBreakStatement";
+import { createCaseBlock } from "./statements/createCaseBlock";
+import { createCaseClause } from "./statements/createCaseClause";
+import { createCatchClause } from "./statements/createCatchClause";
+import { createContinueStatement } from "./statements/createContinueStatement";
+import { createDebuggerStatement } from "./statements/createDebuggerStatement";
+import { createDefaultClause } from "./statements/createDefaultClause";
+import { createDoStatement } from "./statements/createDoStatement";
+import { createEmptyStatement } from "./statements/createEmptyStatement";
 import { createExpressionStatement } from "./statements/createExpressionStatement";
+import { createForInStatement } from "./statements/createForInStatement";
+import { createForOfStatement } from "./statements/createForOfStatement";
+import { createForStatement } from "./statements/createForStatement";
 import { createIfStatement } from "./statements/createIfStatement";
+import { createLabeledStatement } from "./statements/createLabeledStatement";
 import { createReturnStatement } from "./statements/createReturnStatement";
+import { createSwitchStatement } from "./statements/createSwitchStatement";
 import { createThrowStatement } from "./statements/createThrowStatement";
+import { createTryStatement } from "./statements/createTryStatement";
 import { createVariableDeclaration } from "./statements/createVariableDeclaration";
 import { createVariableDeclarationList } from "./statements/createVariableDeclarationList";
 import { createVariableStatement } from "./statements/createVariableStatement";
+import { createWhileStatement } from "./statements/createWhileStatement";
+import { createWithStatement } from "./statements/createWithStatement";
 import { createArrayTypeNode } from "./types/createArrayTypeNode";
 import { createExpressionWithTypeArguments } from "./types/createExpressionWithTypeArguments";
 import { createFunctionTypeNode } from "./types/createFunctionTypeNode";
@@ -96,92 +121,117 @@ import { createUnionTypeNode } from "./types/createUnionTypeNode";
  * @author Jeongho Nam - https://github.com/samchon
  */
 export const factory = {
-  createIdentifier,
-  createPrivateIdentifier,
-  createQualifiedName,
-  createToken,
-  createModifier,
-  createDecorator,
-  createTrue,
-  createFalse,
-  createNull,
-  createThis,
-  createStringLiteral,
-  createNumericLiteral,
-  createBigIntLiteral,
-  createArrayLiteralExpression,
-  createObjectLiteralExpression,
-  createPropertyAssignment,
-  createShorthandPropertyAssignment,
-  createSpreadAssignment,
-  createPropertyAccessExpression,
-  createElementAccessExpression,
-  createCallExpression,
-  createNewExpression,
-  createParenthesizedExpression,
-  createBinaryExpression,
-  createPrefixUnaryExpression,
-  createPostfixUnaryExpression,
-  createConditionalExpression,
-  createArrowFunction,
-  createFunctionExpression,
-  createAsExpression,
-  createSatisfiesExpression,
-  createNonNullExpression,
-  createSpreadElement,
-  createAwaitExpression,
-  createTypeOfExpression,
-  createKeywordTypeNode,
-  createTypeReferenceNode,
-  createArrayTypeNode,
-  createUnionTypeNode,
-  createIntersectionTypeNode,
-  createLiteralTypeNode,
-  createTypeLiteralNode,
-  createFunctionTypeNode,
-  createTupleTypeNode,
-  createParenthesizedType,
-  createTypeOperatorNode,
-  createIndexedAccessTypeNode,
-  createTypeQueryNode,
-  createExpressionWithTypeArguments,
-  createPropertySignature,
-  createIndexSignature,
-  createMethodSignature,
-  createTypeParameterDeclaration,
-  createParameterDeclaration,
   createHeritageClause,
-  createVariableStatement,
-  createVariableDeclarationList,
-  createVariableDeclaration,
-  createExpressionStatement,
-  createReturnStatement,
-  createThrowStatement,
-  createIfStatement,
-  createBlock,
-  createFunctionDeclaration,
+  createParameterDeclaration,
   createClassDeclaration,
-  createPropertyDeclaration,
-  createMethodDeclaration,
+  createClassStaticBlockDeclaration,
   createConstructorDeclaration,
-  createGetAccessorDeclaration,
-  createSetAccessorDeclaration,
-  createInterfaceDeclaration,
-  createTypeAliasDeclaration,
   createEnumDeclaration,
   createEnumMember,
-  createImportDeclaration,
-  createImportClause,
-  createNamedImports,
-  createImportSpecifier,
-  createNamespaceImport,
-  createExportDeclaration,
-  createNamedExports,
-  createExportSpecifier,
-  createExportAssignment,
-  createSourceFile,
+  createExternalModuleReference,
+  createFunctionDeclaration,
+  createGetAccessorDeclaration,
+  createImportEqualsDeclaration,
+  createInterfaceDeclaration,
+  createMethodDeclaration,
+  createModuleBlock,
+  createModuleDeclaration,
+  createNamespaceExportDeclaration,
+  createPropertyDeclaration,
+  createSemicolonClassElement,
+  createSetAccessorDeclaration,
+  createTypeAliasDeclaration,
+  createArrayLiteralExpression,
+  createArrowFunction,
+  createAsExpression,
+  createAwaitExpression,
+  createBinaryExpression,
+  createCallExpression,
+  createConditionalExpression,
+  createElementAccessExpression,
+  createFunctionExpression,
+  createNewExpression,
+  createNonNullExpression,
+  createObjectLiteralExpression,
+  createParenthesizedExpression,
+  createPostfixUnaryExpression,
+  createPrefixUnaryExpression,
+  createPropertyAccessExpression,
+  createPropertyAssignment,
+  createSatisfiesExpression,
+  createShorthandPropertyAssignment,
+  createSpreadAssignment,
+  createSpreadElement,
+  createTypeOfExpression,
   createNodeArray,
+  createSourceFile,
   updateSourceFile,
+  createExportAssignment,
+  createExportDeclaration,
+  createExportSpecifier,
+  createImportClause,
+  createImportDeclaration,
+  createImportSpecifier,
+  createNamedExports,
+  createNamedImports,
+  createNamespaceExport,
+  createNamespaceImport,
+  createBigIntLiteral,
+  createNumericLiteral,
+  createStringLiteral,
+  createDecorator,
+  createFalse,
+  createIdentifier,
+  createModifier,
+  createNull,
+  createPrivateIdentifier,
+  createQualifiedName,
+  createThis,
+  createToken,
+  createTrue,
+  createBlock,
+  createBreakStatement,
+  createCaseBlock,
+  createCaseClause,
+  createCatchClause,
+  createContinueStatement,
+  createDebuggerStatement,
+  createDefaultClause,
+  createDoStatement,
+  createEmptyStatement,
+  createExpressionStatement,
+  createForInStatement,
+  createForOfStatement,
+  createForStatement,
+  createIfStatement,
+  createLabeledStatement,
+  createReturnStatement,
+  createSwitchStatement,
+  createThrowStatement,
+  createTryStatement,
+  createVariableDeclaration,
+  createVariableDeclarationList,
+  createVariableStatement,
+  createWhileStatement,
+  createWithStatement,
+  createArrayTypeNode,
+  createExpressionWithTypeArguments,
+  createFunctionTypeNode,
+  createIndexedAccessTypeNode,
+  createIndexSignature,
+  createIntersectionTypeNode,
+  createKeywordTypeNode,
+  createLiteralTypeNode,
+  createMethodSignature,
+  createParenthesizedType,
+  createPropertySignature,
+  createTupleTypeNode,
+  createTypeLiteralNode,
+  createTypeOperatorNode,
+  createTypeParameterDeclaration,
+  createTypeQueryNode,
+  createTypeReferenceNode,
+  createUnionTypeNode,
 };
 
 /** Outline of the legacy `ts.NodeFactory`. */

@@ -1,14 +1,21 @@
 import type { HeritageClause } from "./clauses/HeritageClause";
 import type { ParameterDeclaration } from "./clauses/ParameterDeclaration";
 import type { ClassDeclaration } from "./declarations/ClassDeclaration";
+import type { ClassStaticBlockDeclaration } from "./declarations/ClassStaticBlockDeclaration";
 import type { ConstructorDeclaration } from "./declarations/ConstructorDeclaration";
 import type { EnumDeclaration } from "./declarations/EnumDeclaration";
 import type { EnumMember } from "./declarations/EnumMember";
+import type { ExternalModuleReference } from "./declarations/ExternalModuleReference";
 import type { FunctionDeclaration } from "./declarations/FunctionDeclaration";
 import type { GetAccessorDeclaration } from "./declarations/GetAccessorDeclaration";
+import type { ImportEqualsDeclaration } from "./declarations/ImportEqualsDeclaration";
 import type { InterfaceDeclaration } from "./declarations/InterfaceDeclaration";
 import type { MethodDeclaration } from "./declarations/MethodDeclaration";
+import type { ModuleBlock } from "./declarations/ModuleBlock";
+import type { ModuleDeclaration } from "./declarations/ModuleDeclaration";
+import type { NamespaceExportDeclaration } from "./declarations/NamespaceExportDeclaration";
 import type { PropertyDeclaration } from "./declarations/PropertyDeclaration";
+import type { SemicolonClassElement } from "./declarations/SemicolonClassElement";
 import type { SetAccessorDeclaration } from "./declarations/SetAccessorDeclaration";
 import type { TypeAliasDeclaration } from "./declarations/TypeAliasDeclaration";
 import type { ArrayLiteralExpression } from "./expressions/ArrayLiteralExpression";
@@ -45,6 +52,7 @@ import type { ImportDeclaration } from "./imports/ImportDeclaration";
 import type { ImportSpecifier } from "./imports/ImportSpecifier";
 import type { NamedExports } from "./imports/NamedExports";
 import type { NamedImports } from "./imports/NamedImports";
+import type { NamespaceExport } from "./imports/NamespaceExport";
 import type { NamespaceImport } from "./imports/NamespaceImport";
 import type { Decorator } from "./names/Decorator";
 import type { Identifier } from "./names/Identifier";
@@ -52,13 +60,30 @@ import type { PrivateIdentifier } from "./names/PrivateIdentifier";
 import type { QualifiedName } from "./names/QualifiedName";
 import type { Token } from "./names/Token";
 import type { Block } from "./statements/Block";
+import type { BreakStatement } from "./statements/BreakStatement";
+import type { CaseBlock } from "./statements/CaseBlock";
+import type { CaseClause } from "./statements/CaseClause";
+import type { CatchClause } from "./statements/CatchClause";
+import type { ContinueStatement } from "./statements/ContinueStatement";
+import type { DebuggerStatement } from "./statements/DebuggerStatement";
+import type { DefaultClause } from "./statements/DefaultClause";
+import type { DoStatement } from "./statements/DoStatement";
+import type { EmptyStatement } from "./statements/EmptyStatement";
 import type { ExpressionStatement } from "./statements/ExpressionStatement";
+import type { ForInStatement } from "./statements/ForInStatement";
+import type { ForOfStatement } from "./statements/ForOfStatement";
+import type { ForStatement } from "./statements/ForStatement";
 import type { IfStatement } from "./statements/IfStatement";
+import type { LabeledStatement } from "./statements/LabeledStatement";
 import type { ReturnStatement } from "./statements/ReturnStatement";
+import type { SwitchStatement } from "./statements/SwitchStatement";
 import type { ThrowStatement } from "./statements/ThrowStatement";
+import type { TryStatement } from "./statements/TryStatement";
 import type { VariableDeclaration } from "./statements/VariableDeclaration";
 import type { VariableDeclarationList } from "./statements/VariableDeclarationList";
 import type { VariableStatement } from "./statements/VariableStatement";
+import type { WhileStatement } from "./statements/WhileStatement";
+import type { WithStatement } from "./statements/WithStatement";
 import type { ArrayTypeNode } from "./types/ArrayTypeNode";
 import type { ExpressionWithTypeArguments } from "./types/ExpressionWithTypeArguments";
 import type { FunctionTypeNode } from "./types/FunctionTypeNode";
@@ -85,82 +110,107 @@ import type { UnionTypeNode } from "./types/UnionTypeNode";
  * @author Jeongho Nam - https://github.com/samchon
  */
 export type Node =
-  | Identifier
-  | PrivateIdentifier
-  | QualifiedName
-  | Token
-  | Decorator
-  | StringLiteral
-  | NumericLiteral
-  | BigIntLiteral
   | ArrayLiteralExpression
-  | ObjectLiteralExpression
-  | PropertyAssignment
-  | ShorthandPropertyAssignment
-  | SpreadAssignment
-  | PropertyAccessExpression
-  | ElementAccessExpression
-  | CallExpression
-  | NewExpression
-  | ParenthesizedExpression
-  | BinaryExpression
-  | PrefixUnaryExpression
-  | PostfixUnaryExpression
-  | ConditionalExpression
-  | ArrowFunction
-  | FunctionExpression
-  | AsExpression
-  | SatisfiesExpression
-  | NonNullExpression
-  | SpreadElement
-  | AwaitExpression
-  | TypeOfExpression
-  | KeywordTypeNode
-  | TypeReferenceNode
   | ArrayTypeNode
-  | UnionTypeNode
-  | IntersectionTypeNode
-  | LiteralTypeNode
-  | TypeLiteralNode
-  | FunctionTypeNode
-  | TupleTypeNode
-  | ParenthesizedTypeNode
-  | TypeOperatorNode
-  | IndexedAccessTypeNode
-  | TypeQueryNode
-  | ExpressionWithTypeArguments
-  | PropertySignature
-  | IndexSignatureDeclaration
-  | MethodSignature
-  | TypeParameterDeclaration
-  | ParameterDeclaration
-  | HeritageClause
-  | VariableStatement
-  | VariableDeclarationList
-  | VariableDeclaration
-  | ExpressionStatement
-  | ReturnStatement
-  | ThrowStatement
-  | IfStatement
+  | ArrowFunction
+  | AsExpression
+  | AwaitExpression
+  | BigIntLiteral
+  | BinaryExpression
   | Block
-  | FunctionDeclaration
+  | BreakStatement
+  | CallExpression
+  | CaseBlock
+  | CaseClause
+  | CatchClause
   | ClassDeclaration
-  | PropertyDeclaration
-  | MethodDeclaration
+  | ClassStaticBlockDeclaration
+  | ConditionalExpression
   | ConstructorDeclaration
-  | GetAccessorDeclaration
-  | SetAccessorDeclaration
-  | InterfaceDeclaration
-  | TypeAliasDeclaration
+  | ContinueStatement
+  | DebuggerStatement
+  | Decorator
+  | DefaultClause
+  | DoStatement
+  | ElementAccessExpression
+  | EmptyStatement
   | EnumDeclaration
   | EnumMember
-  | ImportDeclaration
-  | ImportClause
-  | NamedImports
-  | ImportSpecifier
-  | NamespaceImport
-  | ExportDeclaration
-  | NamedExports
-  | ExportSpecifier
   | ExportAssignment
-  | SourceFile;
+  | ExportDeclaration
+  | ExportSpecifier
+  | ExpressionStatement
+  | ExpressionWithTypeArguments
+  | ExternalModuleReference
+  | ForInStatement
+  | ForOfStatement
+  | ForStatement
+  | FunctionDeclaration
+  | FunctionExpression
+  | FunctionTypeNode
+  | GetAccessorDeclaration
+  | HeritageClause
+  | Identifier
+  | IfStatement
+  | ImportClause
+  | ImportDeclaration
+  | ImportEqualsDeclaration
+  | ImportSpecifier
+  | IndexSignatureDeclaration
+  | IndexedAccessTypeNode
+  | InterfaceDeclaration
+  | IntersectionTypeNode
+  | KeywordTypeNode
+  | LabeledStatement
+  | LiteralTypeNode
+  | MethodDeclaration
+  | MethodSignature
+  | ModuleBlock
+  | ModuleDeclaration
+  | NamedExports
+  | NamedImports
+  | NamespaceExport
+  | NamespaceExportDeclaration
+  | NamespaceImport
+  | NewExpression
+  | NonNullExpression
+  | NumericLiteral
+  | ObjectLiteralExpression
+  | ParameterDeclaration
+  | ParenthesizedExpression
+  | ParenthesizedTypeNode
+  | PostfixUnaryExpression
+  | PrefixUnaryExpression
+  | PrivateIdentifier
+  | PropertyAccessExpression
+  | PropertyAssignment
+  | PropertyDeclaration
+  | PropertySignature
+  | QualifiedName
+  | ReturnStatement
+  | SatisfiesExpression
+  | SemicolonClassElement
+  | SetAccessorDeclaration
+  | ShorthandPropertyAssignment
+  | SourceFile
+  | SpreadAssignment
+  | SpreadElement
+  | StringLiteral
+  | SwitchStatement
+  | ThrowStatement
+  | Token
+  | TryStatement
+  | TupleTypeNode
+  | TypeAliasDeclaration
+  | TypeLiteralNode
+  | TypeOfExpression
+  | TypeOperatorNode
+  | TypeParameterDeclaration
+  | TypeQueryNode
+  | TypeReferenceNode
+  | UnionTypeNode
+  | VariableDeclaration
+  | VariableDeclarationList
+  | VariableStatement
+  | WhileStatement
+  | WithStatement;

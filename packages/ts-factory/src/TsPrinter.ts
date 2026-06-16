@@ -760,6 +760,180 @@ export class TsPrinter {
           hardline,
         ]);
 
+      /* loops & flow */
+      case "ForStatement":
+        return concat([
+          "for (",
+          node.initializer ? this.emit(node.initializer) : "",
+          "; ",
+          node.condition ? this.emit(node.condition) : "",
+          "; ",
+          node.incrementor ? this.emit(node.incrementor) : "",
+          ") ",
+          this.emit(node.statement),
+        ]);
+      case "ForInStatement":
+        return concat([
+          "for (",
+          this.emit(node.initializer),
+          " in ",
+          this.emit(node.expression),
+          ") ",
+          this.emit(node.statement),
+        ]);
+      case "ForOfStatement":
+        return concat([
+          "for ",
+          node.awaitModifier ? "await " : "",
+          "(",
+          this.emit(node.initializer),
+          " of ",
+          this.emit(node.expression),
+          ") ",
+          this.emit(node.statement),
+        ]);
+      case "WhileStatement":
+        return concat([
+          "while (",
+          this.emit(node.expression),
+          ") ",
+          this.emit(node.statement),
+        ]);
+      case "DoStatement":
+        return concat([
+          "do ",
+          this.emit(node.statement),
+          " while (",
+          this.emit(node.expression),
+          ");",
+        ]);
+      case "SwitchStatement":
+        return concat([
+          "switch (",
+          this.emit(node.expression),
+          ") ",
+          this.emit(node.caseBlock),
+        ]);
+      case "CaseBlock":
+        return node.clauses.length === 0
+          ? "{}"
+          : concat([
+              "{",
+              indent(
+                concat([
+                  hardline,
+                  join(
+                    hardline,
+                    node.clauses.map((c) => this.emit(c)),
+                  ),
+                ]),
+              ),
+              hardline,
+              "}",
+            ]);
+      case "CaseClause":
+        return concat([
+          "case ",
+          this.emit(node.expression),
+          ":",
+          node.statements.length
+            ? indent(
+                concat([
+                  hardline,
+                  join(
+                    hardline,
+                    node.statements.map((s) => this.emit(s)),
+                  ),
+                ]),
+              )
+            : "",
+        ]);
+      case "DefaultClause":
+        return concat([
+          "default:",
+          node.statements.length
+            ? indent(
+                concat([
+                  hardline,
+                  join(
+                    hardline,
+                    node.statements.map((s) => this.emit(s)),
+                  ),
+                ]),
+              )
+            : "",
+        ]);
+      case "BreakStatement":
+        return node.label
+          ? concat(["break ", this.emit(node.label), ";"])
+          : "break;";
+      case "ContinueStatement":
+        return node.label
+          ? concat(["continue ", this.emit(node.label), ";"])
+          : "continue;";
+      case "TryStatement":
+        return concat([
+          "try ",
+          this.emit(node.tryBlock),
+          node.catchClause ? concat([" ", this.emit(node.catchClause)]) : "",
+          node.finallyBlock
+            ? concat([" finally ", this.emit(node.finallyBlock)])
+            : "",
+        ]);
+      case "CatchClause":
+        return node.variableDeclaration
+          ? concat([
+              "catch (",
+              this.emit(node.variableDeclaration),
+              ") ",
+              this.emit(node.block),
+            ])
+          : concat(["catch ", this.emit(node.block)]);
+      case "LabeledStatement":
+        return concat([this.emit(node.label), ": ", this.emit(node.statement)]);
+      case "WithStatement":
+        return concat([
+          "with (",
+          this.emit(node.expression),
+          ") ",
+          this.emit(node.statement),
+        ]);
+      case "DebuggerStatement":
+        return "debugger;";
+      case "EmptyStatement":
+        return ";";
+
+      /* modules & namespaces */
+      case "ModuleDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          node.name.kind === "StringLiteral" ? "module " : "namespace ",
+          this.emit(node.name),
+          node.body ? concat([" ", this.emit(node.body)]) : ";",
+        ]);
+      case "ModuleBlock":
+        return this.statementBlock(node.statements.map((s) => this.emit(s)));
+      case "ClassStaticBlockDeclaration":
+        return concat(["static ", this.emit(node.body)]);
+      case "ImportEqualsDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, false),
+          "import ",
+          node.isTypeOnly ? "type " : "",
+          this.emit(node.name),
+          " = ",
+          this.emit(node.moduleReference),
+          ";",
+        ]);
+      case "ExternalModuleReference":
+        return concat(["require(", this.emit(node.expression), ")"]);
+      case "NamespaceExportDeclaration":
+        return concat(["export as namespace ", this.emit(node.name), ";"]);
+      case "SemicolonClassElement":
+        return ";";
+      case "NamespaceExport":
+        return concat(["* as ", this.emit(node.name)]);
+
       default:
         return this.unsupported(node);
     }
