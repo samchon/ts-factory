@@ -363,7 +363,7 @@ export class TsFactoryPrinter {
           this.modifiers(node.modifiers, false),
           "function",
           node.asteriskToken ? "*" : "",
-          node.name ? concat([" ", this.emit(node.name)]) : "",
+          node.name ? concat([" ", this.emit(node.name)]) : " ",
           this.typeArguments(node.typeParameters),
           this.params(node.parameters),
           this.optType(node.type),

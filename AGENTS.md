@@ -79,9 +79,16 @@ what Prettier would produce for the same construct).
 
 ## Tests
 
-`test` runs every `test_*` export under `src/features` (via `ttsx`). A test
-fails by throwing; it asserts on the exact text produced by `TsFactoryPrinter`,
-including width-aware break behavior (use a small `printWidth` to force breaks
-deterministically). Aim for full coverage — every node kind, both inline and
-broken, plus deep nesting. Add new behavior to the relevant `src/features/*.ts`
-file (re-exported from `src/features/index.ts`).
+`test` uses `@nestia/e2e` — `DynamicExecutor` discovers every `test_*` function
+under `src/features` (recursively) and runs it; assertions use `TestValidator`
+(`TestValidator.equals(title, actual, expected)` / `.predicate`).
+
+Conventions (match samchon's other repos):
+
+- **One test function per file**, at `src/features/<category>/test_<name>.ts`.
+- Every test function carries a **JSDoc describing the scenario** it covers.
+- Shared shorthands (`id`, `kw`, `print`, ...) live in `src/internal/helpers.ts`.
+- Cover every factory function and every printer branch — inline *and*
+  width-broken (use a small `printWidth` to force breaks deterministically),
+  including deep nesting. Keep structural coverage at 100% (every `createXxx`
+  referenced; every node kind printed).
