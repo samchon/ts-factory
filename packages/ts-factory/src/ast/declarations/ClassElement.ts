@@ -1,7 +1,9 @@
+import type { ClassStaticBlockDeclaration } from "./ClassStaticBlockDeclaration";
 import type { ConstructorDeclaration } from "./ConstructorDeclaration";
 import type { GetAccessorDeclaration } from "./GetAccessorDeclaration";
 import type { MethodDeclaration } from "./MethodDeclaration";
 import type { PropertyDeclaration } from "./PropertyDeclaration";
+import type { SemicolonClassElement } from "./SemicolonClassElement";
 import type { SetAccessorDeclaration } from "./SetAccessorDeclaration";
 
 /**
@@ -10,8 +12,10 @@ import type { SetAccessorDeclaration } from "./SetAccessorDeclaration";
  * @author Jeongho Nam - https://github.com/samchon
  */
 export type ClassElement =
-  | PropertyDeclaration
-  | MethodDeclaration
+  | ClassStaticBlockDeclaration
   | ConstructorDeclaration
   | GetAccessorDeclaration
+  | MethodDeclaration
+  | PropertyDeclaration
+  | SemicolonClassElement
   | SetAccessorDeclaration;

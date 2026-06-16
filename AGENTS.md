@@ -36,6 +36,10 @@ This is a [pnpm](https://pnpm.io) workspace.
 
 `TsPrinter` is **width-aware** (Prettier-style). It builds a `Doc` per node (`group` / `indent` / `line` / `softline` / `hardline`) and lays it out with `printDocToString`: each list prints on one line when it fits within `printWidth` and breaks (with trailing commas) when it does not. Options: `printWidth` (default `80`), `indent` (default two spaces), `newLine` (default `"\n"`). Keep output stable under `pnpm format` (i.e. it should match what Prettier would produce for the same construct).
 
+## Parity & scope
+
+`factory` mirrors the legacy `ts.NodeFactory` for **source code generation**: ~186 of the 257 `createXxx` methods — every statement, type, expression, declaration, and the convenience operator/export aliases. Intentionally **out of scope** (re-add only if a real need appears): JSX nodes, JSDoc comment nodes, emit/transform internals (`createNotEmittedStatement`, `createPartiallyEmittedExpression`, `createBundle`, `createTempVariable` / `createUniqueName` and friends, `createModifiersFromModifierFlags`), import-attribute / assert nodes, and the `updateXxx` transform mutators (only `updateSourceFile` is kept). When comparing against the real TypeScript API, treat those categories as deliberate omissions.
+
 ## Conventions
 
 - **Language**: TypeScript, `strict`. Built with `ttsc` (tsgo) + `rollup`.

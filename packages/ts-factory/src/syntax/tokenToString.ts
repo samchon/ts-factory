@@ -35,6 +35,11 @@ const TEXTS: { [key in SyntaxKind]: string } = {
   [SyntaxKind.ImplementsKeyword]: "implements",
   [SyntaxKind.KeyOfKeyword]: "keyof",
   [SyntaxKind.UniqueKeyword]: "unique",
+  [SyntaxKind.AssertsKeyword]: "asserts",
+  [SyntaxKind.AwaitKeyword]: "await",
+  [SyntaxKind.ImportKeyword]: "import",
+  [SyntaxKind.NewKeyword]: "new",
+  [SyntaxKind.SuperKeyword]: "super",
   [SyntaxKind.InKeyword]: "in",
   [SyntaxKind.InstanceOfKeyword]: "instanceof",
   [SyntaxKind.AsKeyword]: "as",
@@ -43,7 +48,9 @@ const TEXTS: { [key in SyntaxKind]: string } = {
 
   [SyntaxKind.DotDotDotToken]: "...",
   [SyntaxKind.QuestionToken]: "?",
+  [SyntaxKind.QuestionDotToken]: "?.",
   [SyntaxKind.ColonToken]: ":",
+  [SyntaxKind.CommaToken]: ",",
   [SyntaxKind.EqualsGreaterThanToken]: "=>",
 
   [SyntaxKind.PlusToken]: "+",
@@ -62,6 +69,7 @@ const TEXTS: { [key in SyntaxKind]: string } = {
   [SyntaxKind.CaretToken]: "^",
   [SyntaxKind.LessThanLessThanToken]: "<<",
   [SyntaxKind.GreaterThanGreaterThanToken]: ">>",
+  [SyntaxKind.GreaterThanGreaterThanGreaterThanToken]: ">>>",
 
   [SyntaxKind.LessThanToken]: "<",
   [SyntaxKind.LessThanEqualsToken]: "<=",

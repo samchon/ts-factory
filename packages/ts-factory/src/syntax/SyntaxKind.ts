@@ -47,6 +47,11 @@ export enum SyntaxKind {
   ImplementsKeyword,
   KeyOfKeyword,
   UniqueKeyword,
+  AssertsKeyword,
+  AwaitKeyword,
+  ImportKeyword,
+  NewKeyword,
+  SuperKeyword,
   InKeyword,
   InstanceOfKeyword,
   AsKeyword,
@@ -56,7 +61,9 @@ export enum SyntaxKind {
   // punctuation
   DotDotDotToken,
   QuestionToken,
+  QuestionDotToken,
   ColonToken,
+  CommaToken,
   EqualsGreaterThanToken,
 
   // arithmetic / unary
@@ -77,6 +84,7 @@ export enum SyntaxKind {
   CaretToken,
   LessThanLessThanToken,
   GreaterThanGreaterThanToken,
+  GreaterThanGreaterThanGreaterThanToken,
 
   // relational / equality / logical
   LessThanToken,
