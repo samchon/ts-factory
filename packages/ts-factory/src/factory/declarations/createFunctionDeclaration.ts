@@ -11,6 +11,19 @@ import type {
 import { asName } from "../internal/asName";
 import { make } from "../internal/make";
 
+/**
+ * Create a {@link FunctionDeclaration}.
+ *
+ * @author Jeongho Nam - https://github.com/samchon
+ * @param modifiers The leading modifiers and decorators, if any.
+ * @param asteriskToken The generator marker (`*`), if any.
+ * @param name The name.
+ * @param typeParameters The generic type parameters, if any.
+ * @param parameters The parameters.
+ * @param type The type.
+ * @param body The body.
+ * @returns The created {@link FunctionDeclaration}.
+ */
 export const createFunctionDeclaration = (
   modifiers: readonly ModifierLike[] | undefined,
   asteriskToken: Token | undefined,

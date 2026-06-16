@@ -23,6 +23,11 @@ import type { SpreadElement } from "./SpreadElement";
 import type { StringLiteral } from "./StringLiteral";
 import type { TypeOfExpression } from "./TypeOfExpression";
 
+/**
+ * Any expression node.
+ *
+ * @author Jeongho Nam - https://github.com/samchon
+ */
 export type Expression =
   | StringLiteral
   | NumericLiteral

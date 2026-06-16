@@ -78,6 +78,12 @@ import type { TypeQueryNode } from "./types/TypeQueryNode";
 import type { TypeReferenceNode } from "./types/TypeReferenceNode";
 import type { UnionTypeNode } from "./types/UnionTypeNode";
 
+/**
+ * Every AST node produced by {@link factory}: the discriminated union over all
+ * node kinds, narrowed by the `kind` tag.
+ *
+ * @author Jeongho Nam - https://github.com/samchon
+ */
 export type Node =
   | Identifier
   | PrivateIdentifier

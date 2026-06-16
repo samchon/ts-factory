@@ -12,6 +12,11 @@ import type { TypeQueryNode } from "./TypeQueryNode";
 import type { TypeReferenceNode } from "./TypeReferenceNode";
 import type { UnionTypeNode } from "./UnionTypeNode";
 
+/**
+ * Any type node.
+ *
+ * @author Jeongho Nam - https://github.com/samchon
+ */
 export type TypeNode =
   | KeywordTypeNode
   | TypeReferenceNode

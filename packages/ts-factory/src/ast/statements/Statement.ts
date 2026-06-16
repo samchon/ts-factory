@@ -13,6 +13,11 @@ import type { ReturnStatement } from "./ReturnStatement";
 import type { ThrowStatement } from "./ThrowStatement";
 import type { VariableStatement } from "./VariableStatement";
 
+/**
+ * Any statement node.
+ *
+ * @author Jeongho Nam - https://github.com/samchon
+ */
 export type Statement =
   | VariableStatement
   | ExpressionStatement
