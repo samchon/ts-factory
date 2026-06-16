@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 import { id } from "../../internal/helpers";
 
@@ -10,7 +10,7 @@ import { id } from "../../internal/helpers";
  * it and adds a trailing comma.
  */
 export const test_call_breaks = (): void => {
-  const tiny = new TsFactoryPrinter({ printWidth: 10 });
+  const tiny = new TsPrinter({ printWidth: 10 });
   TestValidator.equals(
     "call break",
     tiny.print(

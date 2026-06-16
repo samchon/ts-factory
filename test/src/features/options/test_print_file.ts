@@ -4,7 +4,7 @@ import factory from "ts-factory";
 import { id, printer } from "../../internal/helpers";
 
 /**
- * {@link TsFactoryPrinter.printFile} composes and prints a source file.
+ * {@link TsPrinter.printFile} composes and prints a source file.
  *
  * The result ends with a trailing newline.
  */

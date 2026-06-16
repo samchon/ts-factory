@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
+import factory, { SyntaxKind, TsPrinter } from "ts-factory";
 
 import { kw } from "../../internal/helpers";
 
@@ -10,7 +10,7 @@ import { kw } from "../../internal/helpers";
  * gets a leading pipe.
  */
 export const test_union_break = (): void => {
-  const narrow = new TsFactoryPrinter({ printWidth: 20 });
+  const narrow = new TsPrinter({ printWidth: 20 });
   TestValidator.equals(
     "union break",
     narrow.print(

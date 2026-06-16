@@ -1,10 +1,10 @@
 /**
  * Internal Wadler/Prettier-style pretty-printing engine.
  *
- * {@link TsFactoryPrinter} builds a {@link Doc} (an intermediate representation)
- * per node instead of concatenating strings, then {@link printDocToString} lays
- * it out against a print width: each {@link group} prints flat when it fits on
- * the current line and breaks otherwise — the same algorithm Prettier uses.
+ * {@link TsPrinter} builds a {@link Doc} (an intermediate representation) per
+ * node instead of concatenating strings, then {@link printDocToString} lays it
+ * out against a print width: each {@link group} prints flat when it fits on the
+ * current line and breaks otherwise — the same algorithm Prettier uses.
  *
  * This module is internal; it is not part of the public `ts-factory` API.
  *

@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 import { num } from "../../internal/helpers";
 
@@ -11,7 +11,7 @@ import { num } from "../../internal/helpers";
  * indentation.
  */
 export const test_deep_nesting = (): void => {
-  const forced = new TsFactoryPrinter({ printWidth: 1 });
+  const forced = new TsPrinter({ printWidth: 1 });
   const node = factory.createObjectLiteralExpression([
     factory.createPropertyAssignment(
       "items",

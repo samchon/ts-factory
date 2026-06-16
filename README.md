@@ -7,7 +7,7 @@
 Hand-written, dependency-free TypeScript **AST factory** and **printer** for source code generation.
 
 ```typescript
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 const node = factory.createCallExpression(
   factory.createPropertyAccessExpression(
@@ -18,7 +18,7 @@ const node = factory.createCallExpression(
   [factory.createStringLiteral("hello world")],
 );
 
-const printer = new TsFactoryPrinter();
+const printer = new TsPrinter();
 console.log(printer.print(node));
 // console.log("hello world")
 ```

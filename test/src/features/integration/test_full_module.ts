@@ -4,7 +4,7 @@ import factory, { SyntaxKind } from "ts-factory";
 import { id, kw, mod, printer } from "../../internal/helpers";
 
 /**
- * Print a whole module via {@link TsFactoryPrinter.printFile}.
+ * Print a whole module via {@link TsPrinter.printFile}.
  *
  * An import plus an exported class with a private field and a public method —
  * an end-to-end check that statements, members, and blocks compose with correct

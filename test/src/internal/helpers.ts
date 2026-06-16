@@ -1,4 +1,4 @@
-import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
+import factory, { SyntaxKind, TsPrinter } from "ts-factory";
 import type {
   Expression,
   Node,
@@ -7,7 +7,7 @@ import type {
 } from "ts-factory";
 
 /** Shared default printer (80 columns, two-space indent). */
-export const printer = new TsFactoryPrinter();
+export const printer = new TsPrinter();
 
 /** Print a node with the shared default printer. */
 export const print = (node: Node): string => printer.print(node);

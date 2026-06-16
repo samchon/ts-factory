@@ -13,8 +13,8 @@ import {
 } from "./internal/doc";
 import { tokenToString } from "./syntax";
 
-/** Options for {@link TsFactoryPrinter}. */
-export interface TsFactoryPrinterOptions {
+/** Options for {@link TsPrinter}. */
+export interface TsPrinterOptions {
   /** Maximum line width before groups break. Defaults to `80`. */
   printWidth?: number;
   /** Indentation unit. Defaults to two spaces. */
@@ -40,27 +40,27 @@ const escapeString = (text: string, singleQuote?: boolean): string => {
  *
  * The printer is a width-aware pretty-printer: it builds a Prettier-style
  * document for the {@link Node} discriminated union and lays it out against
- * {@link TsFactoryPrinterOptions.printWidth}. Lists (arguments, parameters,
- * generic arguments, array / object members, ...) print on one line when they
- * fit and break onto indented lines — with trailing commas — when they do not.
- * Every `node.kind` narrows to its concrete type, so the walk is fully
- * type-checked; no `typescript` module is involved.
+ * {@link TsPrinterOptions.printWidth}. Lists (arguments, parameters, generic
+ * arguments, array / object members, ...) print on one line when they fit and
+ * break onto indented lines — with trailing commas — when they do not. Every
+ * `node.kind` narrows to its concrete type, so the walk is fully type-checked;
+ * no `typescript` module is involved.
  *
  * @author Jeongho Nam - https://github.com/samchon
  * @example
  *   ```typescript
- *   import factory, { TsFactoryPrinter } from "ts-factory";
+ *   import factory, { TsPrinter } from "ts-factory";
  *
- *   const printer = new TsFactoryPrinter({ printWidth: 80, indent: "  " });
+ *   const printer = new TsPrinter({ printWidth: 80, indent: "  " });
  *   printer.print(factory.createStringLiteral("hello")); // "hello"
  *   ```;
  */
-export class TsFactoryPrinter {
+export class TsPrinter {
   private readonly printWidth_: number;
   private readonly indent_: string;
   private readonly newLine_: string;
 
-  public constructor(options: TsFactoryPrinterOptions = {}) {
+  public constructor(options: TsPrinterOptions = {}) {
     this.printWidth_ = options.printWidth ?? 80;
     this.indent_ = options.indent ?? "  ";
     this.newLine_ = options.newLine ?? "\n";
@@ -780,7 +780,7 @@ export class TsFactoryPrinter {
 
   private unsupported(node: never): never {
     throw new Error(
-      `ts-factory: TsFactoryPrinter cannot print node of kind "${
+      `ts-factory: TsPrinter cannot print node of kind "${
         (node as Node).kind
       }".`,
     );

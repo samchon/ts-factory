@@ -90,8 +90,8 @@ import { createUnionTypeNode } from "./types/createUnionTypeNode";
  * node factory (`ts.factory`).
  *
  * Every `createXxx` method mirrors the legacy signature and returns a plain
- * outline node that {@link TsFactoryPrinter} renders to TypeScript source text.
- * No `typescript` module is imported — the logic is implemented directly.
+ * outline node that {@link TsPrinter} renders to TypeScript source text. No
+ * `typescript` module is imported — the logic is implemented directly.
  *
  * @author Jeongho Nam - https://github.com/samchon
  */

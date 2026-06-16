@@ -1,5 +1,5 @@
 /**
- * Token kinds used by {@link factory} and {@link TsFactoryPrinter}.
+ * Token kinds used by {@link factory} and {@link TsPrinter}.
  *
  * This is an outline of the legacy `ts.SyntaxKind` enum: it only enumerates the
  * keyword / modifier / operator tokens that this hand-written factory and

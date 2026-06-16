@@ -22,6 +22,8 @@ export const createVariableStatement = (
   make("VariableStatement", {
     modifiers,
     declarationList: Array.isArray(declarationList)
-      ? createVariableDeclarationList(declarationList)
-      : declarationList,
+      ? createVariableDeclarationList(
+          declarationList as readonly VariableDeclaration[],
+        )
+      : (declarationList as VariableDeclarationList),
   });

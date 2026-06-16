@@ -11,4 +11,4 @@ import { make } from "../internal/make";
  */
 export const createToken = <TKind extends SyntaxKind>(
   token: TKind,
-): Token<TKind> => make("Token", { token });
+): Token<TKind> => make("Token", { token }) as Token<TKind>;

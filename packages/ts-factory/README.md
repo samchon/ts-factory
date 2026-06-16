@@ -11,7 +11,7 @@ npm install ts-factory
 ```
 
 ```typescript
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 const node = factory.createCallExpression(
   factory.createPropertyAccessExpression(
@@ -22,7 +22,7 @@ const node = factory.createCallExpression(
   [factory.createStringLiteral("hello world")],
 );
 
-const printer = new TsFactoryPrinter();
+const printer = new TsPrinter();
 console.log(printer.print(node));
 // console.log("hello world")
 ```
@@ -53,7 +53,7 @@ project.
 | Export                     | Description                                                |
 | -------------------------- | ---------------------------------------------------------- |
 | `factory` (default export) | The node factory; `createXxx` mirror the legacy signatures.|
-| `TsFactoryPrinter`         | Renders factory nodes to TypeScript source text.           |
+| `TsPrinter`         | Renders factory nodes to TypeScript source text.           |
 | `SyntaxKind`, `NodeFlags`  | Outline token & flag enums.                                |
 | Outline AST types          | `Expression`, `Statement`, `TypeNode`, `Node`, ...         |
 
@@ -69,14 +69,14 @@ import factory, { SyntaxKind } from "ts-factory";
 factory.createKeywordTypeNode(SyntaxKind.StringKeyword); // string
 ```
 
-### `TsFactoryPrinter`
+### `TsPrinter`
 
 A **width-aware** printer implemented directly (not a wrapper over `ts.Printer`).
 Like Prettier, it keeps lists on one line when they fit within `printWidth` and
 breaks them — with trailing commas — when they don't.
 
 ```typescript
-const printer = new TsFactoryPrinter({
+const printer = new TsPrinter({
   printWidth: 80, // default 80
   indent: "  ", //   default two spaces
   newLine: "\n", //  default LineFeed

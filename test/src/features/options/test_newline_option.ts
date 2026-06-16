@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 import { num } from "../../internal/helpers";
 
@@ -9,7 +9,7 @@ import { num } from "../../internal/helpers";
  * With `newLine: "\r\n"` the broken output uses CRLF between lines.
  */
 export const test_newline_option = (): void => {
-  const crlf = new TsFactoryPrinter({ printWidth: 1, newLine: "\r\n" });
+  const crlf = new TsPrinter({ printWidth: 1, newLine: "\r\n" });
   TestValidator.equals(
     "crlf",
     crlf.print(factory.createArrayLiteralExpression([num("1"), num("2")])),

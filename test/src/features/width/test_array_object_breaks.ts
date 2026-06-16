@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 import { num } from "../../internal/helpers";
 
@@ -10,7 +10,7 @@ import { num } from "../../internal/helpers";
  * is forced to break.
  */
 export const test_array_object_breaks = (): void => {
-  const tiny = new TsFactoryPrinter({ printWidth: 5 });
+  const tiny = new TsPrinter({ printWidth: 5 });
   TestValidator.equals(
     "array",
     tiny.print(

@@ -11,12 +11,12 @@ to the TypeScript-Go (tsgo, `>= 7.x`) native compiler — where the JavaScript
 The public contract mirrors the legacy factory ergonomics:
 
 ```typescript
-import factory, { TsFactoryPrinter, SyntaxKind, NodeFlags } from "ts-factory";
+import factory, { TsPrinter, SyntaxKind, NodeFlags } from "ts-factory";
 ```
 
 - `factory` (default export) — the node factory; `createXxx` methods mirror the
   legacy signatures and return outline AST nodes.
-- `TsFactoryPrinter` — renders factory nodes to TypeScript source text.
+- `TsPrinter` — renders factory nodes to TypeScript source text.
 - `SyntaxKind` / `NodeFlags` — outline token & flag enums.
 - Outline AST types (`Expression`, `Statement`, `TypeNode`, `Node`, ...).
 
@@ -40,7 +40,7 @@ This is a [pnpm](https://pnpm.io) workspace.
   - `src/factory/` — the builders, **one exported function per file**, grouped
     the same way; `internal/` holds the `make` / `asName` helpers; `factory.ts`
     assembles the `factory` object; `index.ts` is the barrel.
-  - `src/TsFactoryPrinter.ts` — the printer (a single class).
+  - `src/TsPrinter.ts` — the printer (a single class).
   - `src/internal/doc.ts` — internal Prettier-style pretty-printing engine
     (Doc IR + width-aware layout). Not part of the public API.
 - `config` — shared `tsconfig.json` and `rollup.config.mjs`.
@@ -48,7 +48,7 @@ This is a [pnpm](https://pnpm.io) workspace.
 
 ## Printer
 
-`TsFactoryPrinter` is **width-aware** (Prettier-style). It builds a `Doc` per
+`TsPrinter` is **width-aware** (Prettier-style). It builds a `Doc` per
 node (`group` / `indent` / `line` / `softline` / `hardline`) and lays it out with
 `printDocToString`: each list prints on one line when it fits within
 `printWidth` and breaks (with trailing commas) when it does not. Options:
@@ -66,7 +66,7 @@ what Prettier would produce for the same construct).
 - **Public API**: keep `createXxx` names and parameter order aligned with the
   legacy `ts.factory`. To extend coverage, add the node type under `src/ast/`,
   its builder under `src/factory/` (wire it into `factory/factory.ts`), and a
-  `case` in `TsFactoryPrinter.emit`.
+  `case` in `TsPrinter.emit`.
 
 ## Commands
 

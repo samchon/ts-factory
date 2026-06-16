@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { TsFactoryPrinter } from "ts-factory";
+import factory, { TsPrinter } from "ts-factory";
 
 import { num } from "../../internal/helpers";
 
@@ -10,7 +10,7 @@ import { num } from "../../internal/helpers";
  * instead of the default two.
  */
 export const test_indent_option = (): void => {
-  const four = new TsFactoryPrinter({ printWidth: 1, indent: "    " });
+  const four = new TsPrinter({ printWidth: 1, indent: "    " });
   TestValidator.equals(
     "4-space",
     four.print(factory.createArrayLiteralExpression([num("1"), num("2")])),

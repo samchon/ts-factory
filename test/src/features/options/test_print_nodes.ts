@@ -4,7 +4,7 @@ import factory, { NodeFlags } from "ts-factory";
 import { id, num, printer } from "../../internal/helpers";
 
 /**
- * {@link TsFactoryPrinter.printNodes} joins nodes with new lines.
+ * {@link TsPrinter.printNodes} joins nodes with new lines.
  *
  * Two `const` statements print on consecutive lines.
  */

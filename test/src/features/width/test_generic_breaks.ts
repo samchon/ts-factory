@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
+import factory, { SyntaxKind, TsPrinter } from "ts-factory";
 
 import { kw } from "../../internal/helpers";
 
@@ -10,7 +10,7 @@ import { kw } from "../../internal/helpers";
  * list would.
  */
 export const test_generic_breaks = (): void => {
-  const tiny = new TsFactoryPrinter({ printWidth: 10 });
+  const tiny = new TsPrinter({ printWidth: 10 });
   TestValidator.equals(
     "generic break",
     tiny.print(

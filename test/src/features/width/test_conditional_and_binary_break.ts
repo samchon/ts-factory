@@ -1,5 +1,5 @@
 import { TestValidator } from "@nestia/e2e";
-import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
+import factory, { SyntaxKind, TsPrinter } from "ts-factory";
 
 import { id } from "../../internal/helpers";
 
@@ -10,7 +10,7 @@ import { id } from "../../internal/helpers";
  * puts the right operand on the next line.
  */
 export const test_conditional_and_binary_break = (): void => {
-  const forced = new TsFactoryPrinter({ printWidth: 1 });
+  const forced = new TsPrinter({ printWidth: 1 });
   TestValidator.equals(
     "conditional",
     forced.print(

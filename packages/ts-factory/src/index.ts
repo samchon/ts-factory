@@ -5,11 +5,11 @@ import { factory } from "./factory";
  * factory (`ts.factory`) and printer (`ts.Printer`).
  *
  * ```typescript
- * import factory, { SyntaxKind, TsFactoryPrinter } from "ts-factory";
+ * import factory, { SyntaxKind, TsPrinter } from "ts-factory";
  * ```
  *
  * - `factory` (default export) — the node factory.
- * - {@link TsFactoryPrinter} — renders factory nodes to TypeScript source text.
+ * - {@link TsPrinter} — renders factory nodes to TypeScript source text.
  * - {@link SyntaxKind} / {@link NodeFlags} — token & flag enums.
  * - Outline AST types (`Expression`, `Statement`, `TypeNode`, ...).
  *
@@ -21,8 +21,8 @@ import { factory } from "./factory";
 export { factory };
 export type { NodeFactory } from "./factory";
 export { SyntaxKind, NodeFlags, tokenToString } from "./syntax";
-export { TsFactoryPrinter } from "./TsFactoryPrinter";
-export type { TsFactoryPrinterOptions } from "./TsFactoryPrinter";
+export { TsPrinter } from "./TsPrinter";
+export type { TsPrinterOptions } from "./TsPrinter";
 export type * from "./ast";
 
 export default factory;
