@@ -4,7 +4,7 @@ import factory from "ts-factory";
 import { print, ref } from "../../internal/helpers";
 
 /**
- * Print a template literal type, e.g. ``prefix-${T}-suffix``.
+ * Print a template literal type, e.g. `prefix-${T}-suffix`.
  *
  * Composed from a {@link factory.createTemplateHead|head} and a span pairing a
  * type with a {@link factory.createTemplateTail|tail}.

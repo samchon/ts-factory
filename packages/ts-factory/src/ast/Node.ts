@@ -18,35 +18,55 @@ import type { PropertyDeclaration } from "./declarations/PropertyDeclaration";
 import type { SemicolonClassElement } from "./declarations/SemicolonClassElement";
 import type { SetAccessorDeclaration } from "./declarations/SetAccessorDeclaration";
 import type { TypeAliasDeclaration } from "./declarations/TypeAliasDeclaration";
+import type { ArrayBindingPattern } from "./expressions/ArrayBindingPattern";
 import type { ArrayLiteralExpression } from "./expressions/ArrayLiteralExpression";
 import type { ArrowFunction } from "./expressions/ArrowFunction";
 import type { AsExpression } from "./expressions/AsExpression";
 import type { AwaitExpression } from "./expressions/AwaitExpression";
 import type { BigIntLiteral } from "./expressions/BigIntLiteral";
 import type { BinaryExpression } from "./expressions/BinaryExpression";
+import type { BindingElement } from "./expressions/BindingElement";
+import type { CallChain } from "./expressions/CallChain";
 import type { CallExpression } from "./expressions/CallExpression";
+import type { ClassExpression } from "./expressions/ClassExpression";
+import type { CommaListExpression } from "./expressions/CommaListExpression";
+import type { ComputedPropertyName } from "./expressions/ComputedPropertyName";
 import type { ConditionalExpression } from "./expressions/ConditionalExpression";
+import type { DeleteExpression } from "./expressions/DeleteExpression";
+import type { ElementAccessChain } from "./expressions/ElementAccessChain";
 import type { ElementAccessExpression } from "./expressions/ElementAccessExpression";
 import type { FunctionExpression } from "./expressions/FunctionExpression";
+import type { MetaProperty } from "./expressions/MetaProperty";
 import type { NewExpression } from "./expressions/NewExpression";
 import type { NoSubstitutionTemplateLiteral } from "./expressions/NoSubstitutionTemplateLiteral";
+import type { NonNullChain } from "./expressions/NonNullChain";
 import type { NonNullExpression } from "./expressions/NonNullExpression";
 import type { NumericLiteral } from "./expressions/NumericLiteral";
+import type { ObjectBindingPattern } from "./expressions/ObjectBindingPattern";
 import type { ObjectLiteralExpression } from "./expressions/ObjectLiteralExpression";
+import type { OmittedExpression } from "./expressions/OmittedExpression";
 import type { ParenthesizedExpression } from "./expressions/ParenthesizedExpression";
 import type { PostfixUnaryExpression } from "./expressions/PostfixUnaryExpression";
 import type { PrefixUnaryExpression } from "./expressions/PrefixUnaryExpression";
+import type { PropertyAccessChain } from "./expressions/PropertyAccessChain";
 import type { PropertyAccessExpression } from "./expressions/PropertyAccessExpression";
 import type { PropertyAssignment } from "./expressions/PropertyAssignment";
+import type { RegularExpressionLiteral } from "./expressions/RegularExpressionLiteral";
 import type { SatisfiesExpression } from "./expressions/SatisfiesExpression";
 import type { ShorthandPropertyAssignment } from "./expressions/ShorthandPropertyAssignment";
 import type { SpreadAssignment } from "./expressions/SpreadAssignment";
 import type { SpreadElement } from "./expressions/SpreadElement";
 import type { StringLiteral } from "./expressions/StringLiteral";
+import type { TaggedTemplateExpression } from "./expressions/TaggedTemplateExpression";
+import type { TemplateExpression } from "./expressions/TemplateExpression";
 import type { TemplateHead } from "./expressions/TemplateHead";
 import type { TemplateMiddle } from "./expressions/TemplateMiddle";
+import type { TemplateSpan } from "./expressions/TemplateSpan";
 import type { TemplateTail } from "./expressions/TemplateTail";
+import type { TypeAssertion } from "./expressions/TypeAssertion";
 import type { TypeOfExpression } from "./expressions/TypeOfExpression";
+import type { VoidExpression } from "./expressions/VoidExpression";
+import type { YieldExpression } from "./expressions/YieldExpression";
 import type { SourceFile } from "./file/SourceFile";
 import type { ExportAssignment } from "./imports/ExportAssignment";
 import type { ExportDeclaration } from "./imports/ExportDeclaration";
@@ -128,6 +148,7 @@ import type { UnionTypeNode } from "./types/UnionTypeNode";
  * @author Jeongho Nam - https://github.com/samchon
  */
 export type Node =
+  | ArrayBindingPattern
   | ArrayLiteralExpression
   | ArrayTypeNode
   | ArrowFunction
@@ -135,15 +156,20 @@ export type Node =
   | AwaitExpression
   | BigIntLiteral
   | BinaryExpression
+  | BindingElement
   | Block
   | BreakStatement
+  | CallChain
   | CallExpression
   | CallSignatureDeclaration
   | CaseBlock
   | CaseClause
   | CatchClause
   | ClassDeclaration
+  | ClassExpression
   | ClassStaticBlockDeclaration
+  | CommaListExpression
+  | ComputedPropertyName
   | ConditionalExpression
   | ConditionalTypeNode
   | ConstructSignatureDeclaration
@@ -153,7 +179,9 @@ export type Node =
   | DebuggerStatement
   | Decorator
   | DefaultClause
+  | DeleteExpression
   | DoStatement
+  | ElementAccessChain
   | ElementAccessExpression
   | EmptyStatement
   | EnumDeclaration
@@ -188,6 +216,7 @@ export type Node =
   | LabeledStatement
   | LiteralTypeNode
   | MappedTypeNode
+  | MetaProperty
   | MethodDeclaration
   | MethodSignature
   | ModuleBlock
@@ -200,9 +229,12 @@ export type Node =
   | NamespaceImport
   | NewExpression
   | NoSubstitutionTemplateLiteral
+  | NonNullChain
   | NonNullExpression
   | NumericLiteral
+  | ObjectBindingPattern
   | ObjectLiteralExpression
+  | OmittedExpression
   | OptionalTypeNode
   | ParameterDeclaration
   | ParenthesizedExpression
@@ -210,11 +242,13 @@ export type Node =
   | PostfixUnaryExpression
   | PrefixUnaryExpression
   | PrivateIdentifier
+  | PropertyAccessChain
   | PropertyAccessExpression
   | PropertyAssignment
   | PropertyDeclaration
   | PropertySignature
   | QualifiedName
+  | RegularExpressionLiteral
   | RestTypeNode
   | ReturnStatement
   | SatisfiesExpression
@@ -226,10 +260,13 @@ export type Node =
   | SpreadElement
   | StringLiteral
   | SwitchStatement
+  | TaggedTemplateExpression
+  | TemplateExpression
   | TemplateHead
   | TemplateLiteralTypeNode
   | TemplateLiteralTypeSpan
   | TemplateMiddle
+  | TemplateSpan
   | TemplateTail
   | ThisTypeNode
   | ThrowStatement
@@ -237,6 +274,7 @@ export type Node =
   | TryStatement
   | TupleTypeNode
   | TypeAliasDeclaration
+  | TypeAssertion
   | TypeLiteralNode
   | TypeOfExpression
   | TypeOperatorNode
@@ -248,5 +286,7 @@ export type Node =
   | VariableDeclaration
   | VariableDeclarationList
   | VariableStatement
+  | VoidExpression
   | WhileStatement
-  | WithStatement;
+  | WithStatement
+  | YieldExpression;

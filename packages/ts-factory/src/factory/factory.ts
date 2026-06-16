@@ -18,28 +18,48 @@ import { createPropertyDeclaration } from "./declarations/createPropertyDeclarat
 import { createSemicolonClassElement } from "./declarations/createSemicolonClassElement";
 import { createSetAccessorDeclaration } from "./declarations/createSetAccessorDeclaration";
 import { createTypeAliasDeclaration } from "./declarations/createTypeAliasDeclaration";
+import { createArrayBindingPattern } from "./expressions/createArrayBindingPattern";
 import { createArrayLiteralExpression } from "./expressions/createArrayLiteralExpression";
 import { createArrowFunction } from "./expressions/createArrowFunction";
 import { createAsExpression } from "./expressions/createAsExpression";
 import { createAwaitExpression } from "./expressions/createAwaitExpression";
 import { createBinaryExpression } from "./expressions/createBinaryExpression";
+import { createBindingElement } from "./expressions/createBindingElement";
+import { createCallChain } from "./expressions/createCallChain";
 import { createCallExpression } from "./expressions/createCallExpression";
+import { createClassExpression } from "./expressions/createClassExpression";
+import { createCommaListExpression } from "./expressions/createCommaListExpression";
+import { createComputedPropertyName } from "./expressions/createComputedPropertyName";
 import { createConditionalExpression } from "./expressions/createConditionalExpression";
+import { createDeleteExpression } from "./expressions/createDeleteExpression";
+import { createElementAccessChain } from "./expressions/createElementAccessChain";
 import { createElementAccessExpression } from "./expressions/createElementAccessExpression";
 import { createFunctionExpression } from "./expressions/createFunctionExpression";
+import { createMetaProperty } from "./expressions/createMetaProperty";
 import { createNewExpression } from "./expressions/createNewExpression";
+import { createNonNullChain } from "./expressions/createNonNullChain";
 import { createNonNullExpression } from "./expressions/createNonNullExpression";
+import { createObjectBindingPattern } from "./expressions/createObjectBindingPattern";
 import { createObjectLiteralExpression } from "./expressions/createObjectLiteralExpression";
+import { createOmittedExpression } from "./expressions/createOmittedExpression";
 import { createParenthesizedExpression } from "./expressions/createParenthesizedExpression";
 import { createPostfixUnaryExpression } from "./expressions/createPostfixUnaryExpression";
 import { createPrefixUnaryExpression } from "./expressions/createPrefixUnaryExpression";
+import { createPropertyAccessChain } from "./expressions/createPropertyAccessChain";
 import { createPropertyAccessExpression } from "./expressions/createPropertyAccessExpression";
 import { createPropertyAssignment } from "./expressions/createPropertyAssignment";
+import { createRegularExpressionLiteral } from "./expressions/createRegularExpressionLiteral";
 import { createSatisfiesExpression } from "./expressions/createSatisfiesExpression";
 import { createShorthandPropertyAssignment } from "./expressions/createShorthandPropertyAssignment";
 import { createSpreadAssignment } from "./expressions/createSpreadAssignment";
 import { createSpreadElement } from "./expressions/createSpreadElement";
+import { createTaggedTemplateExpression } from "./expressions/createTaggedTemplateExpression";
+import { createTemplateExpression } from "./expressions/createTemplateExpression";
+import { createTemplateSpan } from "./expressions/createTemplateSpan";
+import { createTypeAssertion } from "./expressions/createTypeAssertion";
 import { createTypeOfExpression } from "./expressions/createTypeOfExpression";
+import { createVoidExpression } from "./expressions/createVoidExpression";
+import { createYieldExpression } from "./expressions/createYieldExpression";
 import { createNodeArray } from "./file/createNodeArray";
 import { createSourceFile } from "./file/createSourceFile";
 import { updateSourceFile } from "./file/updateSourceFile";
@@ -67,6 +87,7 @@ import { createModifier } from "./names/createModifier";
 import { createNull } from "./names/createNull";
 import { createPrivateIdentifier } from "./names/createPrivateIdentifier";
 import { createQualifiedName } from "./names/createQualifiedName";
+import { createSuper } from "./names/createSuper";
 import { createThis } from "./names/createThis";
 import { createToken } from "./names/createToken";
 import { createTrue } from "./names/createTrue";
@@ -159,28 +180,48 @@ export const factory = {
   createSemicolonClassElement,
   createSetAccessorDeclaration,
   createTypeAliasDeclaration,
+  createArrayBindingPattern,
   createArrayLiteralExpression,
   createArrowFunction,
   createAsExpression,
   createAwaitExpression,
   createBinaryExpression,
+  createBindingElement,
+  createCallChain,
   createCallExpression,
+  createClassExpression,
+  createCommaListExpression,
+  createComputedPropertyName,
   createConditionalExpression,
+  createDeleteExpression,
+  createElementAccessChain,
   createElementAccessExpression,
   createFunctionExpression,
+  createMetaProperty,
   createNewExpression,
+  createNonNullChain,
   createNonNullExpression,
+  createObjectBindingPattern,
   createObjectLiteralExpression,
+  createOmittedExpression,
   createParenthesizedExpression,
   createPostfixUnaryExpression,
   createPrefixUnaryExpression,
+  createPropertyAccessChain,
   createPropertyAccessExpression,
   createPropertyAssignment,
+  createRegularExpressionLiteral,
   createSatisfiesExpression,
   createShorthandPropertyAssignment,
   createSpreadAssignment,
   createSpreadElement,
+  createTaggedTemplateExpression,
+  createTemplateExpression,
+  createTemplateSpan,
+  createTypeAssertion,
   createTypeOfExpression,
+  createVoidExpression,
+  createYieldExpression,
   createNodeArray,
   createSourceFile,
   updateSourceFile,
@@ -208,6 +249,7 @@ export const factory = {
   createNull,
   createPrivateIdentifier,
   createQualifiedName,
+  createSuper,
   createThis,
   createToken,
   createTrue,

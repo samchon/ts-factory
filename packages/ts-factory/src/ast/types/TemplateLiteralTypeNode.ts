@@ -2,7 +2,7 @@ import type { TemplateHead } from "../expressions/TemplateHead";
 import type { TemplateLiteralTypeSpan } from "./TemplateLiteralTypeSpan";
 
 /**
- * A template literal type, e.g. ``prefix-${T}``.
+ * A template literal type, e.g. `prefix-${T}`.
  *
  * Built by {@link factory.createTemplateLiteralTypeNode}.
  *

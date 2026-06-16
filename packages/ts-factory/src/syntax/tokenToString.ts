@@ -39,6 +39,7 @@ const TEXTS: { [key in SyntaxKind]: string } = {
   [SyntaxKind.AwaitKeyword]: "await",
   [SyntaxKind.ImportKeyword]: "import",
   [SyntaxKind.NewKeyword]: "new",
+  [SyntaxKind.SuperKeyword]: "super",
   [SyntaxKind.InKeyword]: "in",
   [SyntaxKind.InstanceOfKeyword]: "instanceof",
   [SyntaxKind.AsKeyword]: "as",
@@ -47,6 +48,7 @@ const TEXTS: { [key in SyntaxKind]: string } = {
 
   [SyntaxKind.DotDotDotToken]: "...",
   [SyntaxKind.QuestionToken]: "?",
+  [SyntaxKind.QuestionDotToken]: "?.",
   [SyntaxKind.ColonToken]: ":",
   [SyntaxKind.EqualsGreaterThanToken]: "=>",
 

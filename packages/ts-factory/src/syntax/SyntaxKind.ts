@@ -51,6 +51,7 @@ export enum SyntaxKind {
   AwaitKeyword,
   ImportKeyword,
   NewKeyword,
+  SuperKeyword,
   InKeyword,
   InstanceOfKeyword,
   AsKeyword,
@@ -60,6 +61,7 @@ export enum SyntaxKind {
   // punctuation
   DotDotDotToken,
   QuestionToken,
+  QuestionDotToken,
   ColonToken,
   EqualsGreaterThanToken,
 

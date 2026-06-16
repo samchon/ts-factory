@@ -1043,6 +1043,109 @@ export class TsPrinter {
       case "NoSubstitutionTemplateLiteral":
         return concat(["`", node.text, "`"]);
 
+      /* template & misc expressions */
+      case "TemplateExpression":
+        return concat([
+          this.emit(node.head),
+          concat(node.templateSpans.map((s) => this.emit(s))),
+        ]);
+      case "TemplateSpan":
+        return concat([this.emit(node.expression), this.emit(node.literal)]);
+      case "TaggedTemplateExpression":
+        return concat([
+          this.emit(node.tag),
+          this.typeArguments(node.typeArguments),
+          this.emit(node.template),
+        ]);
+      case "YieldExpression":
+        return concat([
+          "yield",
+          node.asteriskToken ? "*" : "",
+          node.expression ? concat([" ", this.emit(node.expression)]) : "",
+        ]);
+      case "DeleteExpression":
+        return concat(["delete ", this.emit(node.expression)]);
+      case "VoidExpression":
+        return concat(["void ", this.emit(node.expression)]);
+      case "RegularExpressionLiteral":
+        return node.text;
+      case "ClassExpression":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "class",
+          node.name ? concat([" ", this.emit(node.name)]) : "",
+          this.typeArguments(node.typeParameters),
+          this.heritage(node.heritageClauses),
+          " ",
+          this.statementBlock(node.members.map((m) => this.emit(m))),
+        ]);
+      case "MetaProperty":
+        return concat([
+          tokenToString(node.keywordToken),
+          ".",
+          this.emit(node.name),
+        ]);
+      case "CommaListExpression":
+        return join(
+          ", ",
+          node.elements.map((e) => this.emit(e)),
+        );
+      case "ComputedPropertyName":
+        return concat(["[", this.emit(node.expression), "]"]);
+      case "OmittedExpression":
+        return "";
+      case "BindingElement":
+        return concat([
+          node.dotDotDotToken ? "..." : "",
+          node.propertyName ? concat([this.emit(node.propertyName), ": "]) : "",
+          this.emit(node.name),
+          node.initializer ? concat([" = ", this.emit(node.initializer)]) : "",
+        ]);
+      case "ObjectBindingPattern":
+        return this.delim(
+          "{",
+          node.elements.map((e) => this.emit(e)),
+          "}",
+          { space: true, trailingComma: true },
+        );
+      case "ArrayBindingPattern":
+        return this.delim(
+          "[",
+          node.elements.map((e) => this.emit(e)),
+          "]",
+          { trailingComma: true },
+        );
+      case "TypeAssertion":
+        return concat([
+          "<",
+          this.emit(node.type),
+          ">",
+          this.emit(node.expression),
+        ]);
+      case "PropertyAccessChain":
+        return concat([
+          this.emit(node.expression),
+          node.questionDotToken ? "?." : ".",
+          this.emit(node.name),
+        ]);
+      case "ElementAccessChain":
+        return concat([
+          this.emit(node.expression),
+          node.questionDotToken ? "?." : "",
+          "[",
+          this.emit(node.argumentExpression),
+          "]",
+        ]);
+      case "CallChain":
+        return concat([
+          this.emit(node.expression),
+          node.questionDotToken ? "?." : "",
+          this.typeArguments(node.typeArguments),
+          this.params(node.arguments),
+        ]);
+      case "NonNullChain":
+        return concat([this.emit(node.expression), "!"]);
+
       default:
         return this.unsupported(node);
     }

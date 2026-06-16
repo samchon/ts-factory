@@ -1,5 +1,5 @@
 /**
- * A template literal with no substitutions, e.g. ``text``.
+ * A template literal with no substitutions, e.g. `text`.
  *
  * Built by {@link factory.createNoSubstitutionTemplateLiteral}.
  *
