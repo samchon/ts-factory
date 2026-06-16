@@ -63,6 +63,7 @@ export enum SyntaxKind {
   QuestionToken,
   QuestionDotToken,
   ColonToken,
+  CommaToken,
   EqualsGreaterThanToken,
 
   // arithmetic / unary
@@ -83,6 +84,7 @@ export enum SyntaxKind {
   CaretToken,
   LessThanLessThanToken,
   GreaterThanGreaterThanToken,
+  GreaterThanGreaterThanGreaterThanToken,
 
   // relational / equality / logical
   LessThanToken,
