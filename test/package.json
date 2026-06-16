@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@ts-factory/test-factory",
+  "name": "@ts-factory/test",
   "version": "0.1.0",
   "description": "Behavior tests for ts-factory.",
   "scripts": {

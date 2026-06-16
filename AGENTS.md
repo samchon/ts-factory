@@ -40,9 +40,21 @@ This is a [pnpm](https://pnpm.io) workspace.
   - `src/factory/` — the builders, **one exported function per file**, grouped
     the same way; `internal/` holds the `make` / `asName` helpers; `factory.ts`
     assembles the `factory` object; `index.ts` is the barrel.
-  - `src/TsFactoryPrinter.ts` — the recursive printer (a single class).
+  - `src/TsFactoryPrinter.ts` — the printer (a single class).
+  - `src/internal/doc.ts` — internal Prettier-style pretty-printing engine
+    (Doc IR + width-aware layout). Not part of the public API.
 - `config` — shared `tsconfig.json` and `rollup.config.mjs`.
-- `tests/test-factory` — dependency-free behavior tests (`test_*` features).
+- `test` — dependency-free behavior tests (`test_*` features under `src/features`).
+
+## Printer
+
+`TsFactoryPrinter` is **width-aware** (Prettier-style). It builds a `Doc` per
+node (`group` / `indent` / `line` / `softline` / `hardline`) and lays it out with
+`printDocToString`: each list prints on one line when it fits within
+`printWidth` and breaks (with trailing commas) when it does not. Options:
+`printWidth` (default `80`), `indent` (default two spaces), `newLine`
+(default `"\n"`). Keep output stable under `pnpm format` (i.e. it should match
+what Prettier would produce for the same construct).
 
 ## Conventions
 
@@ -67,7 +79,9 @@ This is a [pnpm](https://pnpm.io) workspace.
 
 ## Tests
 
-`tests/test-factory` runs every `test_*` export under `src/features`. A test
-fails by throwing; it asserts on the exact text produced by `TsFactoryPrinter`.
-Add new behavior as a `test_<area>_<case>.ts` feature file and re-export it from
-`src/features/index.ts`.
+`test` runs every `test_*` export under `src/features` (via `ttsx`). A test
+fails by throwing; it asserts on the exact text produced by `TsFactoryPrinter`,
+including width-aware break behavior (use a small `printWidth` to force breaks
+deterministically). Aim for full coverage — every node kind, both inline and
+broken, plus deep nesting. Add new behavior to the relevant `src/features/*.ts`
+file (re-exported from `src/features/index.ts`).

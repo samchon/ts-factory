@@ -48,7 +48,7 @@ pnpm format    # prettier
 | ------------------------ | -------------------------------------------- |
 | `packages/ts-factory`    | The published `ts-factory` package.          |
 | `config`                 | Shared `tsconfig` and `rollup` configuration.|
-| `tests/test-factory`     | Behavior tests for factory and printer.      |
+| `test`                   | Behavior tests for factory and printer.      |
 
 ## License
 

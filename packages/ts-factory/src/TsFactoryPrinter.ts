@@ -1,12 +1,26 @@
 import type { ModifierLike, Node, SourceFile, Statement } from "./ast";
+import type { Doc } from "./internal/doc";
+import {
+  concat,
+  group,
+  hardline,
+  ifBreak,
+  indent,
+  join,
+  line,
+  printDocToString,
+  softline,
+} from "./internal/doc";
 import { tokenToString } from "./syntax";
 
 /** Options for {@link TsFactoryPrinter}. */
 export interface TsFactoryPrinterOptions {
+  /** Maximum line width before groups break. Defaults to `80`. */
+  printWidth?: number;
+  /** Indentation unit. Defaults to two spaces. */
+  indent?: string;
   /** New line sequence. Defaults to `"\n"` (LineFeed). */
   newLine?: string;
-  /** Indentation unit. Defaults to four spaces, matching the legacy printer. */
-  indent?: string;
 }
 
 const escapeString = (text: string, singleQuote?: boolean): string => {
@@ -24,37 +38,47 @@ const escapeString = (text: string, singleQuote?: boolean): string => {
  * Printer turning {@link factory} produced AST nodes into TypeScript source
  * text.
  *
- * The printer is implemented directly — it recursively walks the hand-written
- * {@link Node} discriminated union and emits source text with four-space
- * indentation. Every `node.kind` narrows to its concrete type, so the walk is
- * fully type-checked; no `typescript` module is involved.
+ * The printer is a width-aware pretty-printer: it builds a Prettier-style
+ * document for the {@link Node} discriminated union and lays it out against
+ * {@link TsFactoryPrinterOptions.printWidth}. Lists (arguments, parameters,
+ * generic arguments, array / object members, ...) print on one line when they
+ * fit and break onto indented lines — with trailing commas — when they do not.
+ * Every `node.kind` narrows to its concrete type, so the walk is fully
+ * type-checked; no `typescript` module is involved.
  *
  * @author Jeongho Nam - https://github.com/samchon
  * @example
  *   ```typescript
  *   import factory, { TsFactoryPrinter } from "ts-factory";
  *
- *   const printer = new TsFactoryPrinter();
+ *   const printer = new TsFactoryPrinter({ printWidth: 80, indent: "  " });
  *   printer.print(factory.createStringLiteral("hello")); // "hello"
  *   ```;
  */
 export class TsFactoryPrinter {
-  private readonly newLine_: string;
+  private readonly printWidth_: number;
   private readonly indent_: string;
+  private readonly newLine_: string;
 
   public constructor(options: TsFactoryPrinterOptions = {}) {
+    this.printWidth_ = options.printWidth ?? 80;
+    this.indent_ = options.indent ?? "  ";
     this.newLine_ = options.newLine ?? "\n";
-    this.indent_ = options.indent ?? "    ";
   }
 
   /** Print a single node (or a whole {@link SourceFile}) into source text. */
   public print(node: Node): string {
-    return this.lineify(this.emit(node));
+    return this.layout(this.emit(node));
   }
 
   /** Print multiple nodes, joining them with new lines. */
   public printNodes(nodes: readonly Node[]): string {
-    return nodes.map((node) => this.print(node)).join(this.newLine_);
+    return this.layout(
+      join(
+        hardline,
+        nodes.map((n) => this.emit(n)),
+      ),
+    );
   }
 
   /**
@@ -72,68 +96,151 @@ export class TsFactoryPrinter {
     const list: readonly Statement[] = sourceFile
       ? sourceFile.statements
       : statements;
-    return this.lineify(list.map((s) => this.emit(s)).join("\n") + "\n");
+    return (
+      this.layout(
+        join(
+          hardline,
+          list.map((s) => this.emit(s)),
+        ),
+      ) + this.newLine_
+    );
   }
 
   /* ----------------------------------------------------------------------- */
   /*  INTERNAL                                                               */
   /* ----------------------------------------------------------------------- */
-  private lineify(text: string): string {
-    return this.newLine_ === "\n" ? text : text.replace(/\n/g, this.newLine_);
+  private layout(doc: Doc): string {
+    return printDocToString(doc, {
+      printWidth: this.printWidth_,
+      indent: this.indent_,
+      newLine: this.newLine_,
+    });
   }
 
-  private indent(text: string): string {
-    return text
-      .split("\n")
-      .map((line) => (line.length ? this.indent_ + line : line))
-      .join("\n");
+  /** Comma-separated, width-aware delimited list (`(...)`, `[...]`, `<...>`). */
+  private delim(
+    open: string,
+    items: Doc[],
+    close: string,
+    opts: {
+      space?: boolean;
+      trailingComma?: boolean;
+      forceBreak?: boolean;
+    } = {},
+  ): Doc {
+    if (items.length === 0) return open + close;
+    const ln = opts.space ? line : softline;
+    return group(
+      concat([
+        open,
+        indent(concat([ln, join(concat([",", line]), items)])),
+        opts.trailingComma ? ifBreak(",") : "",
+        ln,
+        close,
+      ]),
+      opts.forceBreak === true,
+    );
   }
 
-  private list(nodes: readonly Node[] | undefined, separator: string): string {
-    return (nodes ?? []).map((n) => this.emit(n)).join(separator);
+  /** Semicolon-separated member block (`{ a; b }`), e.g. interfaces. */
+  private memberBlock(items: Doc[], forceBreak: boolean): Doc {
+    if (items.length === 0) return "{}";
+    return group(
+      concat([
+        "{",
+        indent(concat([line, join(concat([";", line]), items)])),
+        ifBreak(";"),
+        line,
+        "}",
+      ]),
+      forceBreak,
+    );
   }
 
-  private typeArguments(args: readonly Node[] | undefined): string {
-    return args && args.length ? `<${this.list(args, ", ")}>` : "";
+  /** Always-broken statement block (`{ ... }`). */
+  private statementBlock(items: Doc[]): Doc {
+    if (items.length === 0) return "{}";
+    return concat([
+      "{",
+      indent(concat([hardline, join(hardline, items)])),
+      hardline,
+      "}",
+    ]);
   }
 
-  private typeParameters(params: readonly Node[] | undefined): string {
-    return params && params.length ? `<${this.list(params, ", ")}>` : "";
+  private typeArguments(args: readonly Node[] | undefined): Doc {
+    return args && args.length
+      ? this.delim(
+          "<",
+          args.map((a) => this.emit(a)),
+          ">",
+          {
+            trailingComma: true,
+          },
+        )
+      : "";
   }
 
-  private parameters(params: readonly Node[] | undefined): string {
-    return `(${this.list(params, ", ")})`;
+  private params(params: readonly Node[]): Doc {
+    return this.delim(
+      "(",
+      params.map((p) => this.emit(p)),
+      ")",
+      {
+        trailingComma: true,
+      },
+    );
   }
 
   private modifiers(
     mods: readonly ModifierLike[] | undefined,
     decoratorsOnNewLine: boolean,
-  ): string {
+  ): Doc {
     if (!mods || mods.length === 0) return "";
     const decorators = mods.filter((m) => m.kind === "Decorator");
     const tokens = mods.filter((m) => m.kind !== "Decorator");
-    let out: string = "";
+    const parts: Doc[] = [];
+    const gap: Doc = decoratorsOnNewLine ? hardline : " ";
     if (decorators.length)
-      out +=
-        decorators
-          .map((d) => this.emit(d))
-          .join(decoratorsOnNewLine ? "\n" : " ") +
-        (decoratorsOnNewLine ? "\n" : " ");
-    if (tokens.length) out += tokens.map((t) => this.emit(t)).join(" ") + " ";
-    return out;
+      parts.push(
+        join(
+          gap,
+          decorators.map((d) => this.emit(d)),
+        ),
+        gap,
+      );
+    if (tokens.length)
+      parts.push(
+        join(
+          " ",
+          tokens.map((t) => this.emit(t)),
+        ),
+        " ",
+      );
+    return concat(parts);
   }
 
-  private braced(members: string[], multiLine: boolean): string {
-    if (members.length === 0) return multiLine ? "{\n}" : "{}";
-    if (!multiLine) return `{ ${members.join(" ")} }`;
-    return `{\n${this.indent(members.join("\n"))}\n}`;
+  private heritage(clauses: readonly Node[] | undefined): Doc {
+    return clauses && clauses.length
+      ? concat([
+          " ",
+          join(
+            " ",
+            clauses.map((c) => this.emit(c)),
+          ),
+        ])
+      : "";
   }
 
-  private heritage(clauses: readonly Node[] | undefined): string {
-    return clauses && clauses.length ? ` ${this.list(clauses, " ")}` : "";
+  private optType(type: Node | undefined): Doc {
+    return type ? concat([": ", this.emit(type)]) : "";
   }
 
-  private emit(node: Node): string {
+  private optBody(body: Node | undefined): Doc {
+    return body ? concat([" ", this.emit(body)]) : ";";
+  }
+
+  private emit(node: Node): Doc {
     switch (node.kind) {
       /* names & tokens */
       case "Identifier":
@@ -141,11 +248,11 @@ export class TsFactoryPrinter {
       case "PrivateIdentifier":
         return node.text;
       case "QualifiedName":
-        return `${this.emit(node.left)}.${this.emit(node.right)}`;
+        return concat([this.emit(node.left), ".", this.emit(node.right)]);
       case "Token":
         return tokenToString(node.token);
       case "Decorator":
-        return `@${this.emit(node.expression)}`;
+        return concat(["@", this.emit(node.expression)]);
 
       /* literals */
       case "StringLiteral":
@@ -157,356 +264,518 @@ export class TsFactoryPrinter {
 
       /* expressions */
       case "ArrayLiteralExpression":
-        return node.elements.length === 0
-          ? "[]"
-          : node.multiLine
-            ? `[\n${this.indent(this.list(node.elements, ",\n"))}\n]`
-            : `[${this.list(node.elements, ", ")}]`;
-      case "ObjectLiteralExpression": {
-        const props: string[] = node.properties.map((p) => this.emit(p));
-        if (props.length === 0) return "{}";
-        return node.multiLine === true
-          ? `{\n${this.indent(props.join(",\n"))}\n}`
-          : `{ ${props.join(", ")} }`;
-      }
+        return this.delim(
+          "[",
+          node.elements.map((e) => this.emit(e)),
+          "]",
+          { trailingComma: true, forceBreak: node.multiLine === true },
+        );
+      case "ObjectLiteralExpression":
+        return this.delim(
+          "{",
+          node.properties.map((p) => this.emit(p)),
+          "}",
+          {
+            space: true,
+            trailingComma: true,
+            forceBreak: node.multiLine === true,
+          },
+        );
       case "PropertyAssignment":
-        return `${this.emit(node.name)}: ${this.emit(node.initializer)}`;
+        return concat([
+          this.emit(node.name),
+          ": ",
+          this.emit(node.initializer),
+        ]);
       case "ShorthandPropertyAssignment":
-        return (
-          this.emit(node.name) +
-          (node.objectAssignmentInitializer
-            ? ` = ${this.emit(node.objectAssignmentInitializer)}`
-            : "")
-        );
+        return concat([
+          this.emit(node.name),
+          node.objectAssignmentInitializer
+            ? concat([" = ", this.emit(node.objectAssignmentInitializer)])
+            : "",
+        ]);
       case "SpreadAssignment":
-        return `...${this.emit(node.expression)}`;
+        return concat(["...", this.emit(node.expression)]);
       case "PropertyAccessExpression":
-        return `${this.emit(node.expression)}.${this.emit(node.name)}`;
+        return concat([this.emit(node.expression), ".", this.emit(node.name)]);
       case "ElementAccessExpression":
-        return `${this.emit(node.expression)}[${this.emit(node.argumentExpression)}]`;
+        return concat([
+          this.emit(node.expression),
+          "[",
+          this.emit(node.argumentExpression),
+          "]",
+        ]);
       case "CallExpression":
-        return `${this.emit(node.expression)}${this.typeArguments(
-          node.typeArguments,
-        )}(${this.list(node.arguments, ", ")})`;
+        return concat([
+          this.emit(node.expression),
+          this.typeArguments(node.typeArguments),
+          this.params(node.arguments),
+        ]);
       case "NewExpression":
-        return `new ${this.emit(node.expression)}${this.typeArguments(
-          node.typeArguments,
-        )}(${this.list(node.arguments, ", ")})`;
+        return concat([
+          "new ",
+          this.emit(node.expression),
+          this.typeArguments(node.typeArguments),
+          this.params(node.arguments ?? []),
+        ]);
       case "ParenthesizedExpression":
-        return `(${this.emit(node.expression)})`;
+        return concat(["(", this.emit(node.expression), ")"]);
       case "BinaryExpression":
-        return `${this.emit(node.left)} ${tokenToString(node.operator)} ${this.emit(
-          node.right,
-        )}`;
+        return group(
+          concat([
+            this.emit(node.left),
+            " ",
+            tokenToString(node.operator),
+            indent(concat([line, this.emit(node.right)])),
+          ]),
+        );
       case "PrefixUnaryExpression":
-        return `${tokenToString(node.operator)}${this.emit(node.operand)}`;
+        return concat([tokenToString(node.operator), this.emit(node.operand)]);
       case "PostfixUnaryExpression":
-        return `${this.emit(node.operand)}${tokenToString(node.operator)}`;
+        return concat([this.emit(node.operand), tokenToString(node.operator)]);
       case "ConditionalExpression":
-        return `${this.emit(node.condition)} ? ${this.emit(
-          node.whenTrue,
-        )} : ${this.emit(node.whenFalse)}`;
+        return group(
+          concat([
+            this.emit(node.condition),
+            indent(
+              concat([
+                line,
+                "? ",
+                this.emit(node.whenTrue),
+                line,
+                ": ",
+                this.emit(node.whenFalse),
+              ]),
+            ),
+          ]),
+        );
       case "ArrowFunction":
-        return (
-          this.modifiers(node.modifiers, false) +
-          this.typeParameters(node.typeParameters) +
-          this.parameters(node.parameters) +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          ` => ${this.emit(node.body)}`
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+          " => ",
+          this.emit(node.body),
+        ]);
       case "FunctionExpression":
-        return (
-          this.modifiers(node.modifiers, false) +
-          "function" +
-          (node.asteriskToken ? "*" : "") +
-          (node.name ? ` ${this.emit(node.name)}` : "") +
-          this.typeParameters(node.typeParameters) +
-          this.parameters(node.parameters) +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          ` ${this.emit(node.body)}`
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          "function",
+          node.asteriskToken ? "*" : "",
+          node.name ? concat([" ", this.emit(node.name)]) : "",
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+          " ",
+          this.emit(node.body),
+        ]);
       case "AsExpression":
-        return `${this.emit(node.expression)} as ${this.emit(node.type)}`;
+        return concat([
+          this.emit(node.expression),
+          " as ",
+          this.emit(node.type),
+        ]);
       case "SatisfiesExpression":
-        return `${this.emit(node.expression)} satisfies ${this.emit(node.type)}`;
+        return concat([
+          this.emit(node.expression),
+          " satisfies ",
+          this.emit(node.type),
+        ]);
       case "NonNullExpression":
-        return `${this.emit(node.expression)}!`;
+        return concat([this.emit(node.expression), "!"]);
       case "SpreadElement":
-        return `...${this.emit(node.expression)}`;
+        return concat(["...", this.emit(node.expression)]);
       case "AwaitExpression":
-        return `await ${this.emit(node.expression)}`;
+        return concat(["await ", this.emit(node.expression)]);
       case "TypeOfExpression":
-        return `typeof ${this.emit(node.expression)}`;
+        return concat(["typeof ", this.emit(node.expression)]);
 
       /* types */
       case "KeywordTypeNode":
         return tokenToString(node.keyword);
       case "TypeReferenceNode":
-        return `${this.emit(node.typeName)}${this.typeArguments(node.typeArguments)}`;
+        return concat([
+          this.emit(node.typeName),
+          this.typeArguments(node.typeArguments),
+        ]);
       case "ArrayTypeNode":
-        return `${this.emit(node.elementType)}[]`;
+        return concat([this.emit(node.elementType), "[]"]);
       case "UnionTypeNode":
-        return this.list(node.types, " | ");
+        return this.binaryType(
+          "|",
+          node.types.map((t) => this.emit(t)),
+        );
       case "IntersectionTypeNode":
-        return this.list(node.types, " & ");
+        return this.binaryType(
+          "&",
+          node.types.map((t) => this.emit(t)),
+        );
       case "LiteralTypeNode":
         return this.emit(node.literal);
       case "TypeLiteralNode":
-        return this.braced(
-          node.members.map((m) => `${this.emit(m)};`),
+        return this.memberBlock(
+          node.members.map((m) => this.emit(m)),
           false,
         );
       case "FunctionTypeNode":
-        return `${this.typeParameters(node.typeParameters)}${this.parameters(
-          node.parameters,
-        )} => ${this.emit(node.type)}`;
+        return concat([
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          " => ",
+          this.emit(node.type),
+        ]);
       case "TupleTypeNode":
-        return `[${this.list(node.elements, ", ")}]`;
+        return this.delim(
+          "[",
+          node.elements.map((e) => this.emit(e)),
+          "]",
+          {
+            trailingComma: true,
+          },
+        );
       case "ParenthesizedTypeNode":
-        return `(${this.emit(node.type)})`;
+        return concat(["(", this.emit(node.type), ")"]);
       case "TypeOperatorNode":
-        return `${tokenToString(node.operator)} ${this.emit(node.type)}`;
+        return concat([
+          tokenToString(node.operator),
+          " ",
+          this.emit(node.type),
+        ]);
       case "IndexedAccessTypeNode":
-        return `${this.emit(node.objectType)}[${this.emit(node.indexType)}]`;
+        return concat([
+          this.emit(node.objectType),
+          "[",
+          this.emit(node.indexType),
+          "]",
+        ]);
       case "TypeQueryNode":
-        return `typeof ${this.emit(node.exprName)}`;
+        return concat(["typeof ", this.emit(node.exprName)]);
       case "ExpressionWithTypeArguments":
-        return `${this.emit(node.expression)}${this.typeArguments(node.typeArguments)}`;
+        return concat([
+          this.emit(node.expression),
+          this.typeArguments(node.typeArguments),
+        ]);
       case "PropertySignature":
-        return (
-          this.modifiers(node.modifiers, false) +
-          this.emit(node.name) +
-          (node.questionToken ? "?" : "") +
-          (node.type ? `: ${this.emit(node.type)}` : "")
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          this.emit(node.name),
+          node.questionToken ? "?" : "",
+          this.optType(node.type),
+        ]);
       case "IndexSignature":
-        return (
-          this.modifiers(node.modifiers, false) +
-          `[${this.list(node.parameters, ", ")}]: ${this.emit(node.type)}`
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          "[",
+          join(
+            ", ",
+            node.parameters.map((p) => this.emit(p)),
+          ),
+          "]: ",
+          this.emit(node.type),
+        ]);
       case "MethodSignature":
-        return (
-          this.modifiers(node.modifiers, false) +
-          this.emit(node.name) +
-          (node.questionToken ? "?" : "") +
-          this.typeParameters(node.typeParameters) +
-          this.parameters(node.parameters) +
-          (node.type ? `: ${this.emit(node.type)}` : "")
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          this.emit(node.name),
+          node.questionToken ? "?" : "",
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+        ]);
       case "TypeParameterDeclaration":
-        return (
-          this.modifiers(node.modifiers, false) +
-          this.emit(node.name) +
-          (node.constraint ? ` extends ${this.emit(node.constraint)}` : "") +
-          (node.default ? ` = ${this.emit(node.default)}` : "")
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          this.emit(node.name),
+          node.constraint
+            ? concat([" extends ", this.emit(node.constraint)])
+            : "",
+          node.default ? concat([" = ", this.emit(node.default)]) : "",
+        ]);
 
       /* support */
       case "ParameterDeclaration":
-        return (
-          this.modifiers(node.modifiers, false) +
-          (node.dotDotDotToken ? "..." : "") +
-          this.emit(node.name) +
-          (node.questionToken ? "?" : "") +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          (node.initializer ? ` = ${this.emit(node.initializer)}` : "")
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          node.dotDotDotToken ? "..." : "",
+          this.emit(node.name),
+          node.questionToken ? "?" : "",
+          this.optType(node.type),
+          node.initializer ? concat([" = ", this.emit(node.initializer)]) : "",
+        ]);
       case "HeritageClause":
-        return `${tokenToString(node.token)} ${this.list(node.types, ", ")}`;
+        return concat([
+          tokenToString(node.token),
+          " ",
+          join(
+            ", ",
+            node.types.map((t) => this.emit(t)),
+          ),
+        ]);
 
       /* statements */
       case "VariableStatement":
-        return `${this.modifiers(node.modifiers, false)}${this.emit(
-          node.declarationList,
-        )};`;
+        return concat([
+          this.modifiers(node.modifiers, false),
+          this.emit(node.declarationList),
+          ";",
+        ]);
       case "VariableDeclarationList": {
         const keyword: string =
           node.flags === 2 ? "const" : node.flags === 1 ? "let" : "var";
-        return `${keyword} ${this.list(node.declarations, ", ")}`;
+        return concat([
+          keyword,
+          " ",
+          join(
+            ", ",
+            node.declarations.map((d) => this.emit(d)),
+          ),
+        ]);
       }
       case "VariableDeclaration":
-        return (
-          this.emit(node.name) +
-          (node.exclamationToken ? "!" : "") +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          (node.initializer ? ` = ${this.emit(node.initializer)}` : "")
-        );
+        return concat([
+          this.emit(node.name),
+          node.exclamationToken ? "!" : "",
+          this.optType(node.type),
+          node.initializer ? concat([" = ", this.emit(node.initializer)]) : "",
+        ]);
       case "ExpressionStatement":
-        return `${this.emit(node.expression)};`;
+        return concat([this.emit(node.expression), ";"]);
       case "ReturnStatement":
         return node.expression
-          ? `return ${this.emit(node.expression)};`
+          ? concat(["return ", this.emit(node.expression), ";"])
           : "return;";
       case "ThrowStatement":
-        return `throw ${this.emit(node.expression)};`;
+        return concat(["throw ", this.emit(node.expression), ";"]);
       case "IfStatement":
-        return (
-          `if (${this.emit(node.expression)}) ${this.emit(node.thenStatement)}` +
-          (node.elseStatement ? ` else ${this.emit(node.elseStatement)}` : "")
-        );
+        return concat([
+          "if (",
+          this.emit(node.expression),
+          ") ",
+          this.emit(node.thenStatement),
+          node.elseStatement
+            ? concat([" else ", this.emit(node.elseStatement)])
+            : "",
+        ]);
       case "Block":
-        return node.statements.length === 0
-          ? "{\n}"
-          : `{\n${this.indent(this.list(node.statements, "\n"))}\n}`;
+        return this.statementBlock(node.statements.map((s) => this.emit(s)));
 
       /* declarations */
       case "FunctionDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          "function" +
-          (node.asteriskToken ? "*" : "") +
-          ` ${node.name ? this.emit(node.name) : ""}` +
-          this.typeParameters(node.typeParameters) +
-          this.parameters(node.parameters) +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          (node.body ? ` ${this.emit(node.body)}` : ";")
-        );
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "function",
+          node.asteriskToken ? "*" : "",
+          " ",
+          node.name ? this.emit(node.name) : "",
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+          this.optBody(node.body),
+        ]);
       case "ClassDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          "class" +
-          (node.name ? ` ${this.emit(node.name)}` : "") +
-          this.typeParameters(node.typeParameters) +
-          this.heritage(node.heritageClauses) +
-          ` ${this.braced(
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "class",
+          node.name ? concat([" ", this.emit(node.name)]) : "",
+          this.typeArguments(node.typeParameters),
+          this.heritage(node.heritageClauses),
+          " ",
+          this.statementBlock(node.members.map((m) => this.emit(m))),
+        ]);
+      case "PropertyDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          this.emit(node.name),
+          node.questionOrExclamationToken
+            ? this.emit(node.questionOrExclamationToken)
+            : "",
+          this.optType(node.type),
+          node.initializer ? concat([" = ", this.emit(node.initializer)]) : "",
+          ";",
+        ]);
+      case "MethodDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          node.asteriskToken ? "*" : "",
+          this.emit(node.name),
+          node.questionToken ? "?" : "",
+          this.typeArguments(node.typeParameters),
+          this.params(node.parameters),
+          this.optType(node.type),
+          this.optBody(node.body),
+        ]);
+      case "ConstructorDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "constructor",
+          this.params(node.parameters),
+          this.optBody(node.body),
+        ]);
+      case "GetAccessorDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "get ",
+          this.emit(node.name),
+          this.params(node.parameters),
+          this.optType(node.type),
+          this.optBody(node.body),
+        ]);
+      case "SetAccessorDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "set ",
+          this.emit(node.name),
+          this.params(node.parameters),
+          this.optBody(node.body),
+        ]);
+      case "InterfaceDeclaration":
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "interface ",
+          this.emit(node.name),
+          this.typeArguments(node.typeParameters),
+          this.heritage(node.heritageClauses),
+          " ",
+          this.memberBlock(
             node.members.map((m) => this.emit(m)),
             true,
-          )}`
-        );
-      case "PropertyDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          this.emit(node.name) +
-          (node.questionOrExclamationToken
-            ? this.emit(node.questionOrExclamationToken)
-            : "") +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          (node.initializer ? ` = ${this.emit(node.initializer)}` : "") +
-          ";"
-        );
-      case "MethodDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          (node.asteriskToken ? "*" : "") +
-          this.emit(node.name) +
-          (node.questionToken ? "?" : "") +
-          this.typeParameters(node.typeParameters) +
-          this.parameters(node.parameters) +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          (node.body ? ` ${this.emit(node.body)}` : ";")
-        );
-      case "ConstructorDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          `constructor${this.parameters(node.parameters)}` +
-          (node.body ? ` ${this.emit(node.body)}` : ";")
-        );
-      case "GetAccessorDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          `get ${this.emit(node.name)}${this.parameters(node.parameters)}` +
-          (node.type ? `: ${this.emit(node.type)}` : "") +
-          (node.body ? ` ${this.emit(node.body)}` : ";")
-        );
-      case "SetAccessorDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          `set ${this.emit(node.name)}${this.parameters(node.parameters)}` +
-          (node.body ? ` ${this.emit(node.body)}` : ";")
-        );
-      case "InterfaceDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          `interface ${this.emit(node.name)}` +
-          this.typeParameters(node.typeParameters) +
-          this.heritage(node.heritageClauses) +
-          ` ${this.braced(
-            node.members.map((m) => `${this.emit(m)};`),
-            true,
-          )}`
-        );
+          ),
+        ]);
       case "TypeAliasDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          `type ${this.emit(node.name)}` +
-          this.typeParameters(node.typeParameters) +
-          ` = ${this.emit(node.type)};`
-        );
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "type ",
+          this.emit(node.name),
+          this.typeArguments(node.typeParameters),
+          " = ",
+          this.emit(node.type),
+          ";",
+        ]);
       case "EnumDeclaration":
-        return (
-          this.modifiers(node.modifiers, true) +
-          `enum ${this.emit(node.name)} ` +
-          (node.members.length === 0
-            ? "{\n}"
-            : `{\n${this.indent(this.list(node.members, ",\n"))}\n}`)
-        );
+        return concat([
+          this.modifiers(node.modifiers, true),
+          "enum ",
+          this.emit(node.name),
+          " ",
+          node.members.length === 0
+            ? "{}"
+            : concat([
+                "{",
+                indent(
+                  concat([
+                    hardline,
+                    join(
+                      concat([",", hardline]),
+                      node.members.map((m) => this.emit(m)),
+                    ),
+                    ",",
+                  ]),
+                ),
+                hardline,
+                "}",
+              ]),
+        ]);
       case "EnumMember":
-        return (
-          this.emit(node.name) +
-          (node.initializer ? ` = ${this.emit(node.initializer)}` : "")
-        );
+        return concat([
+          this.emit(node.name),
+          node.initializer ? concat([" = ", this.emit(node.initializer)]) : "",
+        ]);
 
       /* imports & exports */
       case "ImportDeclaration":
-        return (
-          this.modifiers(node.modifiers, false) +
-          "import " +
-          (node.importClause ? `${this.emit(node.importClause)} from ` : "") +
-          `${this.emit(node.moduleSpecifier)};`
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          "import ",
+          node.importClause
+            ? concat([this.emit(node.importClause), " from "])
+            : "",
+          this.emit(node.moduleSpecifier),
+          ";",
+        ]);
       case "ImportClause": {
-        const named: string[] = [];
+        const named: Doc[] = [];
         if (node.name) named.push(this.emit(node.name));
         if (node.namedBindings) named.push(this.emit(node.namedBindings));
-        return `${node.isTypeOnly ? "type " : ""}${named.join(", ")}`;
+        return concat([node.isTypeOnly ? "type " : "", join(", ", named)]);
       }
       case "NamedImports":
-        return node.elements.length === 0
-          ? "{}"
-          : `{ ${this.list(node.elements, ", ")} }`;
+        return this.delim(
+          "{",
+          node.elements.map((e) => this.emit(e)),
+          "}",
+          { space: true, trailingComma: true },
+        );
       case "ImportSpecifier":
-        return (
-          (node.isTypeOnly ? "type " : "") +
-          (node.propertyName ? `${this.emit(node.propertyName)} as ` : "") +
-          this.emit(node.name)
-        );
+        return concat([
+          node.isTypeOnly ? "type " : "",
+          node.propertyName
+            ? concat([this.emit(node.propertyName), " as "])
+            : "",
+          this.emit(node.name),
+        ]);
       case "NamespaceImport":
-        return `* as ${this.emit(node.name)}`;
+        return concat(["* as ", this.emit(node.name)]);
       case "ExportDeclaration":
-        return (
-          this.modifiers(node.modifiers, false) +
-          "export " +
-          (node.isTypeOnly ? "type " : "") +
-          (node.exportClause ? this.emit(node.exportClause) : "*") +
-          (node.moduleSpecifier
-            ? ` from ${this.emit(node.moduleSpecifier)}`
-            : "") +
-          ";"
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          "export ",
+          node.isTypeOnly ? "type " : "",
+          node.exportClause ? this.emit(node.exportClause) : "*",
+          node.moduleSpecifier
+            ? concat([" from ", this.emit(node.moduleSpecifier)])
+            : "",
+          ";",
+        ]);
       case "NamedExports":
-        return node.elements.length === 0
-          ? "{}"
-          : `{ ${this.list(node.elements, ", ")} }`;
+        return this.delim(
+          "{",
+          node.elements.map((e) => this.emit(e)),
+          "}",
+          { space: true, trailingComma: true },
+        );
       case "ExportSpecifier":
-        return (
-          (node.isTypeOnly ? "type " : "") +
-          (node.propertyName ? `${this.emit(node.propertyName)} as ` : "") +
-          this.emit(node.name)
-        );
+        return concat([
+          node.isTypeOnly ? "type " : "",
+          node.propertyName
+            ? concat([this.emit(node.propertyName), " as "])
+            : "",
+          this.emit(node.name),
+        ]);
       case "ExportAssignment":
-        return (
-          this.modifiers(node.modifiers, false) +
-          (node.isExportEquals ? "export = " : "export default ") +
-          `${this.emit(node.expression)};`
-        );
+        return concat([
+          this.modifiers(node.modifiers, false),
+          node.isExportEquals ? "export = " : "export default ",
+          this.emit(node.expression),
+          ";",
+        ]);
 
       /* source file */
       case "SourceFile":
-        return node.statements.map((s) => this.emit(s)).join("\n") + "\n";
+        return concat([
+          join(
+            hardline,
+            node.statements.map((s) => this.emit(s)),
+          ),
+          hardline,
+        ]);
 
       default:
         return this.unsupported(node);
     }
+  }
+
+  /** Width-aware `|` / `&` type list with leading-operator breaks. */
+  private binaryType(operator: string, parts: Doc[]): Doc {
+    if (parts.length === 1) return parts[0]!;
+    return group(
+      indent(
+        concat([
+          ifBreak(concat([line, operator, " "])),
+          join(concat([line, operator, " "]), parts),
+        ]),
+      ),
+    );
   }
 
   private unsupported(node: never): never {

@@ -28,9 +28,6 @@ catalogs:
     ttsc:
       specifier: ^0.15.3
       version: 0.15.3
-    typescript:
-      specifier: ~6.0.3
-      version: 6.0.3
   utils:
     '@types/node':
       specifier: ^25.3.3
@@ -94,18 +91,24 @@ importers:
       rollup:
         specifier: catalog:rollup
         version: 4.62.0
+      rollup-plugin-auto-external:
+        specifier: catalog:rollup
+        version: 2.0.0(rollup@4.62.0)
+      rollup-plugin-node-externals:
+        specifier: catalog:rollup
+        version: 8.1.2(rollup@4.62.0)
+      tinyglobby:
+        specifier: ^0.2.12
+        version: 0.2.17
       ttsc:
         specifier: catalog:typescript
         version: 0.15.3
-      typescript:
-        specifier: catalog:typescript
-        version: 6.0.3
 
-  tests/test-factory:
+  test:
     dependencies:
       ts-factory:
         specifier: workspace:^
-        version: link:../../packages/ts-factory
+        version: link:../packages/ts-factory
     devDependencies:
       '@types/node':
         specifier: catalog:utils
@@ -869,11 +872,6 @@ packages:
 
   ttsc@0.15.3:
     resolution: {integrity: sha512-lyO/CddbP1gHDLHVvpjRVhUdIubCsl6kkMau3kjI+jQloD5hKHvipEz1yKWhKtCyOM+/vokP+ua8SD5lDo21pQ==}
-    hasBin: true
-
-  typescript@6.0.3:
-    resolution: {integrity: sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==}
-    engines: {node: '>=14.17'}
     hasBin: true
 
   undici-types@7.24.6:
@@ -1647,8 +1645,6 @@ snapshots:
       '@ttsc/linux-x64': 0.15.3
       '@ttsc/win32-arm64': 0.15.3
       '@ttsc/win32-x64': 0.15.3
-
-  typescript@6.0.3: {}
 
   undici-types@7.24.6: {}
 

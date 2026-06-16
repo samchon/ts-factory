@@ -71,15 +71,32 @@ factory.createKeywordTypeNode(SyntaxKind.StringKeyword); // string
 
 ### `TsFactoryPrinter`
 
-A printer implemented directly (not a wrapper over `ts.Printer`). It walks the
-factory nodes and emits source text with four-space indentation.
+A **width-aware** printer implemented directly (not a wrapper over `ts.Printer`).
+Like Prettier, it keeps lists on one line when they fit within `printWidth` and
+breaks them — with trailing commas — when they don't.
 
 ```typescript
-const printer = new TsFactoryPrinter(/* { newLine?, indent? } */);
+const printer = new TsFactoryPrinter({
+  printWidth: 80, // default 80
+  indent: "  ", //   default two spaces
+  newLine: "\n", //  default LineFeed
+});
 
 printer.print(node);              // print one node (or a SourceFile)
 printer.printNodes([a, b, c]);    // print many nodes, joined by new lines
 printer.printFile(undefined, st); // compose & print a whole source file
+```
+
+```typescript
+// fits on one line → inline
+factory.createCallExpression(id("foo"), undefined, [a, b]); // foo(a, b)
+
+// exceeds printWidth → breaks
+// foo(
+//   argumentOne,
+//   argumentTwo,
+//   argumentThree,
+// )
 ```
 
 ## Coverage
